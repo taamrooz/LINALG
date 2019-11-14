@@ -18,7 +18,8 @@ endif()
 
 # Add source to this project's executable.
 add_executable (LINALG
-	src/main.cpp)
+	src/main.cpp
+	src/game.cpp)
 
 target_compile_features(LINALG PUBLIC cxx_std_17)
 if (MSVC)
