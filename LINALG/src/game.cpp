@@ -42,9 +42,10 @@ bool Game::init()
 			{
 				switch (e.key.keysym.sym)
 				{
-				case SDLK_1: vectors_[0].add(&vectors_[1]); break;
-				case SDLK_2: vectors_[1].add(&vectors_[0]); break;
-				case SDLK_3: vectors_[0].multiply(2); break;
+				case SDLK_1: o.scale_from_origin(2,2); break;
+				case SDLK_2: o.translate(2, 2); break;
+				case SDLK_3: o.scale_from_point(2, 2); break;
+				case SDLK_4: o.scale_from_point(0.5, 0.5); break;
 				}
 			}
 		}
@@ -58,7 +59,7 @@ bool Game::init()
 
 
 		SDL_RenderPresent(renderer_);
-		//SDL_UpdateWindowSurface(window_);
+		SDL_Delay(1000 / 30);
 	}
 	if (renderer_ != nullptr) {
 		SDL_DestroyRenderer(renderer_);
@@ -101,38 +102,38 @@ void Game::make_object()
 	auto p1 = std::make_shared<point>(point{
 		10,
 		10,
-		k_screen_height,
-		k_screen_width
+		k_screen_width,
+		k_screen_height
 		});
 	auto p2 = std::make_shared<point>(point{
 		10,
 		200,
-		k_screen_height,
-		k_screen_width
+		k_screen_width,
+		k_screen_height
 	});
 	auto p3 = std::make_shared<point>(point{
 		30,
 		200,
-		k_screen_height,
-		k_screen_width
+		k_screen_width,
+		k_screen_height
 	});
 	auto p4 = std::make_shared<point>(point{
 		30,
 		30,
-		k_screen_height,
-		k_screen_width
+		k_screen_width,
+		k_screen_height
 	});
 	auto p5 = std::make_shared<point>(point{
 		150,
 		30,
-		k_screen_height,
-		k_screen_width
+		k_screen_width,
+		k_screen_height
 	});
 	auto p6 = std::make_shared<point>(point{
 		150,
 		10,
-		k_screen_height,
-		k_screen_width
+		k_screen_width,
+		k_screen_height
 	});
 	p1->connections.emplace_back(p2);
 	p1->connections.emplace_back(p6);

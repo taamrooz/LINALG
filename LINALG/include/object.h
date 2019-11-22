@@ -10,7 +10,7 @@ public:
 	std::vector<std::shared_ptr<point>> points{};
 	void add_point(std::shared_ptr<point> p);
 	void render(SDL_Renderer* renderer_);
-	void scale_from_origin();
-	void translate();
-	void scale_from_point();
+	void scale_from_origin(double x, double y);
+	void translate(double x, double y);
+	void scale_from_point(double scale_x, double scale_y);
 };
