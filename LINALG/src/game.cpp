@@ -46,6 +46,7 @@ bool Game::init()
 				case SDLK_2: o.translate(2, 2); break;
 				case SDLK_3: o.scale_from_point(2, 2); break;
 				case SDLK_4: o.scale_from_point(0.5, 0.5); break;
+				case SDLK_5: o.rotate_origin(0.5*M_PI); break;
 				}
 			}
 		}

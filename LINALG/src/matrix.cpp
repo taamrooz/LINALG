@@ -3,7 +3,7 @@
 matrix::matrix(int rows, int columns)
 {
 	for (int i = 0; i < rows; ++i)
-		numbers.emplace_back(std::vector<double>(columns));
+		numbers.emplace_back(std::vector<float>(columns));
 }
 
 void matrix::add(const matrix* m)
@@ -55,7 +55,7 @@ matrix* matrix::multiply_vector(vector* v)
 	{
 		if (row.size() != 2)
 			return nullptr;
-		temp_matrix.numbers.emplace_back(std::vector<double>{row[0] * v->x + row[1] * v->y});
+		temp_matrix.numbers.emplace_back(std::vector<float>{row[0] * v->x + row[1] * v->y});
 	}
 	numbers = temp_matrix.numbers;
 	return this;
@@ -73,7 +73,7 @@ matrix* matrix::multiply_matrix(matrix* m)
 	{
 		auto column_counter = 0;
 		while (column_counter < m->numbers.front().size()) {
-			auto mult_total = 0;
+			float mult_total = 0;
 			auto row_in_arg = 0;
 			for (auto column : row)
 			{

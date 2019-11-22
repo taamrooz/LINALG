@@ -38,9 +38,9 @@ void object::translate(double x, double y)
 	for (auto& point : points)
 	{
 		auto m = matrix{};
-		m.numbers.emplace_back(std::vector<double>{static_cast<double>(point->x)});
-		m.numbers.emplace_back(std::vector<double>{static_cast<double>(point->y)});
-		m.numbers.emplace_back(std::vector<double>{1});
+		m.numbers.emplace_back(std::vector<float>{point->x});
+		m.numbers.emplace_back(std::vector<float>{point->y});
+		m.numbers.emplace_back(std::vector<float>{1});
 		auto t = translation_matrix(x, y);
 		t.multiply_matrix(&m);
 		point->x = t.numbers[0][0];
@@ -50,8 +50,49 @@ void object::translate(double x, double y)
 
 void object::scale_from_point(double scale_x, double scale_y)
 {
-	int total_x = 0;
-	int total_y = 0;
+	auto p_middle = get_middle_point();
+	translate(0 - p_middle.x, 0 - p_middle.y);
+	scale_from_origin(scale_x, scale_y);
+	translate(p_middle.x, p_middle.y);
+}
+
+void object::rotate_origin(double degrees)
+{
+	for (auto& point : points)
+	{
+		auto v = vector{
+		point->x,
+		point->y
+		};
+		auto m = rotation_matrix(degrees);
+		m.multiply_vector(&v);
+		point->x = m.numbers[0][0];
+		point->y = m.numbers[1][0];
+	}
+}
+
+void object::rotate_middle(double degrees)
+{
+	auto p_middle = get_middle_point();
+	translate(0 - p_middle.x, 0 - p_middle.y);
+	for (auto& point : points)
+	{
+		auto v = vector{
+		point->x,
+		point->y
+		};
+		auto m = rotation_matrix(degrees);
+		m.multiply_vector(&v);
+		point->x = m.numbers[0][0];
+		point->y = m.numbers[1][0];
+	}
+	translate(p_middle.x, p_middle.y);
+}
+
+point object::get_middle_point()
+{
+	float total_x = 0;
+	float total_y = 0;
 	for (auto& point : points)
 	{
 		total_x += point->x;
@@ -59,12 +100,9 @@ void object::scale_from_point(double scale_x, double scale_y)
 	}
 	total_x /= points.size();
 	total_y /= points.size();
-	point p_middle{
+	return {
 		total_x,
 		total_y,
 		0,0
 	};
-	translate(0 - p_middle.x, 0 - p_middle.y);
-	scale_from_origin(scale_x, scale_y);
-	translate(p_middle.x, p_middle.y);
 }

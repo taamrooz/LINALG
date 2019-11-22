@@ -13,5 +13,5 @@ public:
 	matrix* multiply_vector(vector* v);
 	matrix* multiply_matrix(matrix* m);
 	void render(SDL_Renderer* renderer_, int k_screen_width, int k_screen_height);
-	std::vector<std::vector<double>> numbers{};
+	std::vector<std::vector<float>> numbers{};
 };

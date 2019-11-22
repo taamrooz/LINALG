@@ -13,7 +13,7 @@ void vector::subtract(const vector* v)
 	y -= v->y;
 }
 
-void vector::multiply(int scalar)
+void vector::multiply(float scalar)
 {
 	x *= scalar;
 	y *= scalar;

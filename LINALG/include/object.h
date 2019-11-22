@@ -13,4 +13,7 @@ public:
 	void scale_from_origin(double x, double y);
 	void translate(double x, double y);
 	void scale_from_point(double scale_x, double scale_y);
+	void rotate_origin(double degrees);
+	void rotate_middle(double degrees);
+	point get_middle_point();
 };
