@@ -13,12 +13,16 @@ else()
 	include(FindPkgConfig)
 	find_package(SDL2 REQUIRED)
 	add_compile_options(-Wall -Wpedantic -Werror)
-	add_compile_options("$<$<CONFIG:DEBUG>:-g>")
 endif()
 
 # Add source to this project's executable.
 add_executable (LINALG
+	src/grid.cpp
+	src/vector.cpp
 	src/main.cpp
+	src/object.cpp
+	src/point.cpp
+	src/matrix.cpp
 	src/game.cpp)
 
 target_compile_features(LINALG PUBLIC cxx_std_17)
