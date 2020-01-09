@@ -1,5 +1,4 @@
 #pragma once
-#include "SDL.h"
 #include "vector.h"
 #include <vector>
 
@@ -12,6 +11,5 @@ public:
 	void subtract(const matrix* m);
 	matrix* multiply_vector(vector* v);
 	matrix* multiply_matrix(matrix* m);
-	void render(SDL_Renderer* renderer_, int k_screen_width, int k_screen_height);
 	std::vector<std::vector<float>> numbers{};
 };

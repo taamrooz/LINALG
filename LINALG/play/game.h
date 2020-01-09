@@ -1,9 +1,9 @@
 #pragma once
 #include "SDL.h"
-#include "renderable.h"
 #include <vector>
-#include "vector.h"
 #include "object.h"
+#include "vector.h"
+#include "renderable.h"
 
 class Game
 {

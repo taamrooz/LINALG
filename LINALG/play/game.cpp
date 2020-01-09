@@ -1,8 +1,5 @@
 #include "game.h"
 #include <iostream>
-#include "grid.h"
-#include "point.h"
-#include "object.h"
 
 bool Game::init()
 {
@@ -42,11 +39,11 @@ bool Game::init()
 			{
 				switch (e.key.keysym.sym)
 				{
-				case SDLK_1: o.scale_from_origin(2,2); break;
+				case SDLK_1: o.scale_from_origin(2, 2); break;
 				case SDLK_2: o.translate(2, 2); break;
 				case SDLK_3: o.scale_from_point(2, 2); break;
 				case SDLK_4: o.scale_from_point(0.5, 0.5); break;
-				case SDLK_5: o.rotate_origin(0.5*M_PI); break;
+				case SDLK_5: o.rotate_origin(0.5 * M_PI); break;
 				}
 			}
 		}
@@ -90,11 +87,13 @@ void Game::init_vectors()
 {
 	vectors_.emplace_back(vector{
 		30,
-		60
+		60,
+		0
 		});
 	vectors_.emplace_back(vector{
-	-20,
-	30
+		-20,
+		30,
+		0
 		});
 }
 
@@ -103,39 +102,45 @@ void Game::make_object()
 	auto p1 = std::make_shared<point>(point{
 		10,
 		10,
+		0,
 		k_screen_width,
 		k_screen_height
 		});
 	auto p2 = std::make_shared<point>(point{
 		10,
 		200,
+		0,
 		k_screen_width,
 		k_screen_height
-	});
+		});
 	auto p3 = std::make_shared<point>(point{
 		30,
 		200,
+		0,
 		k_screen_width,
 		k_screen_height
-	});
+		});
 	auto p4 = std::make_shared<point>(point{
 		30,
 		30,
+		0,
 		k_screen_width,
 		k_screen_height
-	});
+		});
 	auto p5 = std::make_shared<point>(point{
 		150,
 		30,
+		0,
 		k_screen_width,
 		k_screen_height
-	});
+		});
 	auto p6 = std::make_shared<point>(point{
 		150,
 		10,
+		0,
 		k_screen_width,
 		k_screen_height
-	});
+		});
 	p1->connections.emplace_back(p2);
 	p1->connections.emplace_back(p6);
 	p2->connections.emplace_back(p1);

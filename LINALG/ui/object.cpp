@@ -1,4 +1,5 @@
 #include "object.h"
+#include "vector.h"
 #include "standard_matrices.h"
 
 void object::add_point(std::shared_ptr<point> p)
@@ -24,13 +25,14 @@ void object::scale_from_origin(double x, double y)
 	{
 		auto v = vector{
 		point->x,
-		point->y
+		point->y,
+		point->z
 		};
 		auto m = scaling_matrix(x, y);
 		m.multiply_vector(&v);
 		point->x = m.numbers[0][0];
 		point->y = m.numbers[1][0];
-	}	
+	}
 }
 
 void object::translate(double x, double y)
@@ -62,7 +64,8 @@ void object::rotate_origin(double degrees)
 	{
 		auto v = vector{
 		point->x,
-		point->y
+		point->y,
+		point->z
 		};
 		auto m = rotation_matrix(degrees);
 		m.multiply_vector(&v);
@@ -79,7 +82,8 @@ void object::rotate_middle(double degrees)
 	{
 		auto v = vector{
 		point->x,
-		point->y
+		point->y,
+		point->z
 		};
 		auto m = rotation_matrix(degrees);
 		m.multiply_vector(&v);
@@ -103,6 +107,7 @@ point object::get_middle_point()
 	return {
 		total_x,
 		total_y,
+		0,
 		0,0
 	};
 }

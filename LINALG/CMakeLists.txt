@@ -17,13 +17,14 @@ endif()
 
 # Add source to this project's executable.
 add_executable (LINALG
-	src/grid.cpp
-	src/vector.cpp
-	src/main.cpp
-	src/object.cpp
-	src/point.cpp
-	src/matrix.cpp
-	src/game.cpp)
+	main.cpp
+	play/game.cpp
+	ui/grid.cpp
+	ui/object.cpp
+	ui/point.cpp
+	math/vector.cpp
+	math/matrix.cpp
+	)
 
 target_compile_features(LINALG PUBLIC cxx_std_17)
 if (MSVC)
@@ -33,8 +34,9 @@ target_link_libraries(LINALG PRIVATE
 	"${SDL2_LIBRARIES}"
 )
 target_include_directories(LINALG PUBLIC 
-	src
-	include
+	math
+	ui
+	play
     "${SDL2_INCLUDE_DIRS}"
 )
 # TODO: Add tests and install targets if needed.

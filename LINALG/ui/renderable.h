@@ -5,6 +5,7 @@ class renderable
 public:
 	float x;
 	float y;
+	float z;
 	int screen_width;
 	int screen_height;
 	float get_render_x() const
@@ -15,8 +16,8 @@ public:
 	{
 		return screen_height / 2 + -1 * y;
 	};
-	renderable(float x, float y, int screen_width, int screen_height):
-	x(x), y(y), screen_width(screen_width), screen_height(screen_height)
+	renderable(float x, float y, float z, int screen_width, int screen_height):
+	x(x), y(y), z(z), screen_width(screen_width), screen_height(screen_height)
 	{}
 	
 };
