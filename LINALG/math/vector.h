@@ -20,6 +20,5 @@ public:
 	float length() const;
 	void normalize();
 	void multiply(float scalar);
-	void render(SDL_Renderer* renderer_, int k_screen_width, int k_screen_height);
 	float x, y, z;
 };

@@ -21,7 +21,7 @@ add_executable (LINALG
 	play/game.cpp
 	ui/grid.cpp
 	ui/object.cpp
-	ui/point.cpp
+	ui/renderer.cpp
 	math/vector.cpp
 	math/matrix.cpp
 	)
@@ -34,9 +34,9 @@ target_link_libraries(LINALG PRIVATE
 	"${SDL2_LIBRARIES}"
 )
 target_include_directories(LINALG PUBLIC 
-	math
 	ui
 	play
+	math
     "${SDL2_INCLUDE_DIRS}"
 )
 # TODO: Add tests and install targets if needed.

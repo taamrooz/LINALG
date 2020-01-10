@@ -20,6 +20,7 @@ bool Game::init()
 	}
 
 	SDL_SetRenderDrawColor(renderer_, 0xFF, 0xFF, 0xFF, 0xFF);
+	r_ = { renderer_ };
 	init_vectors();
 	make_object();
 
@@ -39,23 +40,15 @@ bool Game::init()
 			{
 				switch (e.key.keysym.sym)
 				{
-				case SDLK_1: o.scale_from_origin(2, 2); break;
-				case SDLK_2: o.translate(2, 2); break;
-				case SDLK_3: o.scale_from_point(2, 2); break;
-				case SDLK_4: o.scale_from_point(0.5, 0.5); break;
-				case SDLK_5: o.rotate_origin(0.5 * M_PI); break;
+				case SDLK_1: o.scale_from_origin(2, 2, 2); break;
+				case SDLK_2: o.translate(2, 2, 2); break;
+				case SDLK_3: o.scale_from_point(2, 2, 2); break;
+				case SDLK_4: o.scale_from_point(0.5, 0.5, 0.5); break;
 				}
 			}
 		}
-		draw_grid();
-
-		for (auto item : vectors_)
-		{
-			item.render(renderer_, k_screen_width, k_screen_height);
-		}
-		o.render(renderer_);
-
-
+		r_.render(o,false,false,false);
+		
 		SDL_RenderPresent(renderer_);
 		SDL_Delay(1000 / 30);
 	}
@@ -66,21 +59,6 @@ bool Game::init()
 		SDL_DestroyWindow(window_);
 	}
 	return true;
-}
-
-void Game::draw_grid()
-{
-	SDL_SetRenderDrawColor(renderer_, 255, 255, 255, SDL_ALPHA_OPAQUE);
-	SDL_RenderDrawLine(renderer_, 0, k_screen_height / 2, k_screen_width, k_screen_height / 2);
-	SDL_RenderDrawLine(renderer_, k_screen_width / 2, 0, k_screen_width / 2, k_screen_height);
-	for (int i = 10; i < k_screen_height; i += 10)
-	{
-		SDL_RenderDrawLine(renderer_, k_screen_width / 2 - 5, i, k_screen_width / 2 + 5, i);
-	}
-	for (int i = 10; i < k_screen_width; i += 10)
-	{
-		SDL_RenderDrawLine(renderer_, i, k_screen_height / 2 - 5, i, k_screen_height / 2 + 5);
-	}
 }
 
 void Game::init_vectors()
@@ -99,64 +77,57 @@ void Game::init_vectors()
 
 void Game::make_object()
 {
-	auto p1 = std::make_shared<point>(point{
-		10,
-		10,
-		0,
-		k_screen_width,
-		k_screen_height
-		});
-	auto p2 = std::make_shared<point>(point{
-		10,
-		200,
-		0,
-		k_screen_width,
-		k_screen_height
-		});
-	auto p3 = std::make_shared<point>(point{
-		30,
-		200,
-		0,
-		k_screen_width,
-		k_screen_height
-		});
-	auto p4 = std::make_shared<point>(point{
-		30,
-		30,
-		0,
-		k_screen_width,
-		k_screen_height
-		});
-	auto p5 = std::make_shared<point>(point{
-		150,
-		30,
-		0,
-		k_screen_width,
-		k_screen_height
-		});
-	auto p6 = std::make_shared<point>(point{
-		150,
-		10,
-		0,
-		k_screen_width,
-		k_screen_height
-		});
-	p1->connections.emplace_back(p2);
-	p1->connections.emplace_back(p6);
-	p2->connections.emplace_back(p1);
-	p2->connections.emplace_back(p3);
-	p3->connections.emplace_back(p2);
-	p3->connections.emplace_back(p4);
-	p4->connections.emplace_back(p3);
-	p4->connections.emplace_back(p5);
-	p5->connections.emplace_back(p4);
-	p5->connections.emplace_back(p6);
-	p6->connections.emplace_back(p5);
-	p6->connections.emplace_back(p1);
-	o.add_point(p1);
-	o.add_point(p2);
-	o.add_point(p3);
-	o.add_point(p4);
-	o.add_point(p5);
-	o.add_point(p6);
+	object o{};
+
+	auto p1 = std::make_shared<point>(point{{50,100,250}});
+	
+	auto p2 = std::make_shared<point>(point{ {50,100,300} });
+	
+	auto p3 = std::make_shared<point>(point{ {250,0,200} });
+	auto p4 = std::make_shared<point>(point{ {250,0,350} });
+	auto p5 = std::make_shared<point>(point{ {300,0,50} });
+	auto p6 = std::make_shared<point>(point{ {300,0,500} });
+	auto p7 = std::make_shared<point>(point{ {350,0,50} });
+	auto p8 = std::make_shared<point>(point{ {350,0,500} });
+	auto p9 = std::make_shared<point>(point{ {370,0,170} });
+	auto p10 = std::make_shared<point>(point{ {370,0,190} });
+	auto p11 = std::make_shared<point>(point{ {430,0,170} });
+	auto p12 = std::make_shared<point>(point{ {430,0,190} });
+	auto p13 = std::make_shared<point>(point{ {380,0,210} });
+	auto p14 = std::make_shared<point>(point{ {400,0,250} });
+	auto p15 = std::make_shared<point>(point{ {400,0,300} });
+	auto p16 = std::make_shared<point>(point{ {380,0,340} });
+	auto p17 = std::make_shared<point>(point{ {370,0,360} });
+	auto p18 = std::make_shared<point>(point{ {370,0,380} });
+	auto p19 = std::make_shared<point>(point{ {430,0,360} });
+	auto p20 = std::make_shared<point>(point{ {430,0,380} });
+
+	p1->link(p2);
+	p1->link(p3);	
+	p2->link(p4);
+	p3->link(p5);
+	p4->link(p6);
+	p5->link(p7);
+	p6->link(p8);
+	p7->link(p9);
+	p8->link(p18);
+	p9->link(p11);
+	p9->link(p10);
+	p10->link(p12);
+	p11->link(p12);
+	p13->link(p10);
+	p13->link(p14);
+	p14->link(p15);
+	p15->link(p16);
+	p16->link(p17);
+	p17->link(p19);
+	p17->link(p18);
+	p18->link(p20);
+	p19->link(p20);
+
+	o.add_points(std::vector<std::shared_ptr<point>>{
+		p1,p2,p3,p4,p5,p6,p7,p8,p9,p10,p11,p12,p13,p14,p15,p16,p17,p18,p19,p20
+	});
+	this->o = o;
+	objects_.emplace_back(o);
 }

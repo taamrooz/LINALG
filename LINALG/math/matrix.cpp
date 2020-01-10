@@ -12,13 +12,13 @@ void matrix::add(const matrix* m)
 		return;
 
 	auto row_counter = 0;
-	for (auto row : numbers)
+	for (auto& row : numbers)
 	{
 		if (row.size() != m->numbers[row_counter].size())
 			return;
 
 		auto column_counter = 0;
-		for (auto column : row)
+		for (auto& column : row)
 		{
 			column += m->numbers[row_counter][column_counter];
 			++column_counter;
@@ -33,13 +33,13 @@ void matrix::subtract(const matrix* m)
 		return;
 
 	auto row_counter = 0;
-	for (auto row : numbers)
+	for (auto& row : numbers)
 	{
 		if (row.size() != m->numbers[row_counter].size())
 			return;
 
 		auto column_counter = 0;
-		for (auto column : row)
+		for (auto& column : row)
 		{
 			column -= m->numbers[row_counter][column_counter];
 			++column_counter;
@@ -48,17 +48,17 @@ void matrix::subtract(const matrix* m)
 	};
 }
 
-matrix* matrix::multiply_vector(vector* v)
+matrix& matrix::multiply_vector(vector* v)
 {
 	matrix temp_matrix{};
 	for (auto& row : numbers)
 	{
-		if (row.size() != 2)
-			return nullptr;
-		temp_matrix.numbers.emplace_back(std::vector<float>{row[0] * v->x + row[1] * v->y});
+		if (row.size() != 3)
+			return *this;
+		temp_matrix.numbers.emplace_back(std::vector<float>{row[0] * v->x + row[1] * v->y + row[2] * v->z});
 	}
 	numbers = temp_matrix.numbers;
-	return this;
+	return *this;
 }
 
 matrix* matrix::multiply_matrix(matrix* m)
@@ -75,7 +75,7 @@ matrix* matrix::multiply_matrix(matrix* m)
 		while (column_counter < m->numbers.front().size()) {
 			float mult_total = 0;
 			auto row_in_arg = 0;
-			for (auto column : row)
+			for (auto& column : row)
 			{
 				mult_total += column * m->numbers[row_in_arg][column_counter];
 				++row_in_arg;

@@ -3,7 +3,7 @@
 #include <vector>
 #include "object.h"
 #include "vector.h"
-#include "renderable.h"
+#include "renderer.h"
 
 class Game
 {
@@ -14,10 +14,10 @@ private:
 	int k_screen_height = 600;
 	SDL_Window* window_{};
 	SDL_Renderer* renderer_{};
-	void draw_grid();
+	renderer r_ = nullptr;
 	void init_vectors();
 	void make_object();
-	std::vector<renderable> renderables_{};
+	std::vector<object> objects_{};
 	std::vector<vector> vectors_{};
 	object o{};
 };

@@ -1,5 +1,4 @@
 #pragma once
-#include "renderable.h"
 #include "SDL.h"
 
 class grid

@@ -2,112 +2,125 @@
 #include "vector.h"
 #include "standard_matrices.h"
 
-void object::add_point(std::shared_ptr<point> p)
+void object::add_plane(std::shared_ptr<plane> p)
 {
-	points.emplace_back(p);
+	planes.emplace_back(p);
 }
 
-void object::render(SDL_Renderer* renderer_)
+void object::add_planes(std::vector<std::shared_ptr<plane>> ps)
 {
-	for (const auto& point : points)
+	for (auto& p : ps)
 	{
-		point->render(renderer_);
-		for (auto connection : point->connections)
+		planes.emplace_back(p);
+	}
+}
+
+void object::scale_from_origin(double x, double y, double z)
+{
+	for (auto& plane : planes)
+	{
+		for (auto& point : plane->points)
 		{
-			SDL_RenderDrawLine(renderer_, connection->get_render_x(), connection->get_render_y(), point->get_render_x(), point->get_render_y());
+			auto v = vector{
+			point->vector.x,
+			point->vector.y,
+			point->vector.z
+			};
+			auto m = scaling_matrix_3d(x, y, z);
+			m.multiply_vector(&v);
+			point->vector.x = m.numbers[0][0];
+			point->vector.y = m.numbers[1][0];
+			point->vector.z = m.numbers[2][0];
 		}
 	}
 }
 
-void object::scale_from_origin(double x, double y)
+void object::translate(double x, double y, double z)
 {
-	for (auto& point : points)
+	for (auto& plane : planes)
 	{
-		auto v = vector{
-		point->x,
-		point->y,
-		point->z
-		};
-		auto m = scaling_matrix(x, y);
-		m.multiply_vector(&v);
-		point->x = m.numbers[0][0];
-		point->y = m.numbers[1][0];
+		for (auto& point : plane->points)
+		{
+			auto m = matrix{};
+			m.numbers.emplace_back(std::vector<float>{point->vector.x});
+			m.numbers.emplace_back(std::vector<float>{point->vector.y});
+			m.numbers.emplace_back(std::vector<float>{point->vector.z});
+			m.numbers.emplace_back(std::vector<float>{1});
+			auto t = translation_matrix_3d(x, y, z);
+			t.multiply_matrix(&m);
+			point->vector.x = t.numbers[0][0];
+			point->vector.y = t.numbers[1][0];
+			point->vector.z = t.numbers[2][0];
+		}
 	}
 }
 
-void object::translate(double x, double y)
-{
-	for (auto& point : points)
-	{
-		auto m = matrix{};
-		m.numbers.emplace_back(std::vector<float>{point->x});
-		m.numbers.emplace_back(std::vector<float>{point->y});
-		m.numbers.emplace_back(std::vector<float>{1});
-		auto t = translation_matrix(x, y);
-		t.multiply_matrix(&m);
-		point->x = t.numbers[0][0];
-		point->y = t.numbers[1][0];
-	}
-}
-
-void object::scale_from_point(double scale_x, double scale_y)
+void object::scale_from_point(double scale_x, double scale_y, double scale_z)
 {
 	auto p_middle = get_middle_point();
-	translate(0 - p_middle.x, 0 - p_middle.y);
-	scale_from_origin(scale_x, scale_y);
-	translate(p_middle.x, p_middle.y);
+	translate(0 - p_middle.vector.x, 0 - p_middle.vector.y, 0 - p_middle.vector.z);
+	scale_from_origin(scale_x, scale_y, scale_z);
+	translate(p_middle.vector.x, p_middle.vector.y, p_middle.vector.z);
 }
 
-void object::rotate_origin(double degrees)
-{
-	for (auto& point : points)
-	{
-		auto v = vector{
-		point->x,
-		point->y,
-		point->z
-		};
-		auto m = rotation_matrix(degrees);
-		m.multiply_vector(&v);
-		point->x = m.numbers[0][0];
-		point->y = m.numbers[1][0];
-	}
-}
-
-void object::rotate_middle(double degrees)
-{
-	auto p_middle = get_middle_point();
-	translate(0 - p_middle.x, 0 - p_middle.y);
-	for (auto& point : points)
-	{
-		auto v = vector{
-		point->x,
-		point->y,
-		point->z
-		};
-		auto m = rotation_matrix(degrees);
-		m.multiply_vector(&v);
-		point->x = m.numbers[0][0];
-		point->y = m.numbers[1][0];
-	}
-	translate(p_middle.x, p_middle.y);
-}
+//void object::rotate_origin(double degrees)
+//{
+//	for (auto& point : points)
+//	{
+//		auto v = vector{
+//		point->vector.x,
+//		point->vector.y,
+//		point->vector.z
+//		};
+//		auto m = rotation_matrix_2d(degrees);
+//		m.multiply_vector(&v);
+//		point->vector.x = m.numbers[0][0];
+//		point->vector.y = m.numbers[1][0];
+//		point->vector.z = m.numbers[2][0];
+//	}
+//}
+//
+//void object::rotate_middle(double degrees)
+//{
+//	auto p_middle = get_middle_point();
+//	translate(0 - p_middle.x, 0 - p_middle.y);
+//	for (auto& point : points)
+//	{
+//		auto v = vector{
+//		point->x,
+//		point->y,
+//		point->z
+//		};
+//		auto m = rotation_matrix_2d(degrees);
+//		m.multiply_vector(&v);
+//		point->x = m.numbers[0][0];
+//		point->y = m.numbers[1][0];
+//	}
+//	translate(p_middle.x, p_middle.y);
+//}
 
 point object::get_middle_point()
 {
 	float total_x = 0;
 	float total_y = 0;
-	for (auto& point : points)
+	float total_z = 0;
+	float total = 0;
+	for (auto& plane : planes)
 	{
-		total_x += point->x;
-		total_y += point->y;
+		for (auto& point : plane->points)
+		{
+			total_x += point->vector.x;
+			total_y += point->vector.y;
+			total_z += point->vector.z;
+			total++;
+		}
 	}
-	total_x /= points.size();
-	total_y /= points.size();
+	total_x /= total;
+	total_y /= total;
+	total_z /= total;
 	return {
-		total_x,
+		{total_x,
 		total_y,
-		0,
-		0,0
+		total_z}
 	};
 }
