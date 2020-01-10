@@ -17,4 +17,5 @@ public:
 	void rotate_origin(double degrees);
 	void rotate_middle(double degrees);
 	point get_middle_point();
+	void link_planes();
 };

@@ -7,5 +7,7 @@ private:
 	SDL_Renderer* renderer_;
 public:
 	renderer(SDL_Renderer* renderer);
-	void render(object& o, bool x_axis, bool y_axis, bool z_axis);
+	void render_front(object& o);
+	void render_side(object& o);
+	void render_top(object& o);
 };

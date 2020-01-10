@@ -124,3 +124,11 @@ point object::get_middle_point()
 		total_z}
 	};
 }
+
+void object::link_planes()
+{
+	for (auto& plane : planes)
+	{
+		plane->link_points();
+	}
+}

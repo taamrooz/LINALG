@@ -26,6 +26,10 @@ bool Game::init()
 
 	SDL_Event e;
 	bool quit = false;
+
+	bool render_top = false;
+	bool render_front = false;
+	bool render_side = false;
 	while (!quit)
 	{
 		SDL_SetRenderDrawColor(renderer_, 0, 0, 0, SDL_ALPHA_OPAQUE);
@@ -44,11 +48,19 @@ bool Game::init()
 				case SDLK_2: o.translate(2, 2, 2); break;
 				case SDLK_3: o.scale_from_point(2, 2, 2); break;
 				case SDLK_4: o.scale_from_point(0.5, 0.5, 0.5); break;
+				case SDLK_t: render_top = !render_top; break;
+				case SDLK_f: render_front = !render_front; break;
+				case SDLK_s: render_side = !render_side; break;
 				}
 			}
 		}
-		r_.render(o,false,false,false);
-		
+		if (render_top)
+			r_.render_top(o);
+		if (render_front)
+			r_.render_front(o);
+		if (render_side)
+			r_.render_side(o);
+
 		SDL_RenderPresent(renderer_);
 		SDL_Delay(1000 / 30);
 	}
@@ -78,56 +90,92 @@ void Game::init_vectors()
 void Game::make_object()
 {
 	object o{};
+	//Nose front
+	o.add_plane({ std::make_shared<plane>(
+		std::vector<std::shared_ptr<point>>{
+		std::make_shared<point>(point{ {50,100,300} }),
+			std::make_shared<point>(point{ {50,100,350} }),
+						std::make_shared<point>(point{ {50,50,350} }),
+			std::make_shared<point>(point{ {50,50,300} })
 
-	auto p1 = std::make_shared<point>(point{{50,100,250}});
-	
-	auto p2 = std::make_shared<point>(point{ {50,100,300} });
-	
-	auto p3 = std::make_shared<point>(point{ {250,0,200} });
-	auto p4 = std::make_shared<point>(point{ {250,0,350} });
-	auto p5 = std::make_shared<point>(point{ {300,0,50} });
-	auto p6 = std::make_shared<point>(point{ {300,0,500} });
-	auto p7 = std::make_shared<point>(point{ {350,0,50} });
-	auto p8 = std::make_shared<point>(point{ {350,0,500} });
-	auto p9 = std::make_shared<point>(point{ {370,0,170} });
-	auto p10 = std::make_shared<point>(point{ {370,0,190} });
-	auto p11 = std::make_shared<point>(point{ {430,0,170} });
-	auto p12 = std::make_shared<point>(point{ {430,0,190} });
-	auto p13 = std::make_shared<point>(point{ {380,0,210} });
-	auto p14 = std::make_shared<point>(point{ {400,0,250} });
-	auto p15 = std::make_shared<point>(point{ {400,0,300} });
-	auto p16 = std::make_shared<point>(point{ {380,0,340} });
-	auto p17 = std::make_shared<point>(point{ {370,0,360} });
-	auto p18 = std::make_shared<point>(point{ {370,0,380} });
-	auto p19 = std::make_shared<point>(point{ {430,0,360} });
-	auto p20 = std::make_shared<point>(point{ {430,0,380} });
+	}) });
+	//Nose back
+	o.add_plane({ std::make_shared<plane>(
+	std::vector<std::shared_ptr<point>>{
+	std::make_shared<point>(point{ {250,100,300} }),
+		std::make_shared<point>(point{ {250,100,350} }),
+					std::make_shared<point>(point{ {250,50,350} }),
+		std::make_shared<point>(point{ {250,50,300} })
 
-	p1->link(p2);
-	p1->link(p3);	
-	p2->link(p4);
-	p3->link(p5);
-	p4->link(p6);
-	p5->link(p7);
-	p6->link(p8);
-	p7->link(p9);
-	p8->link(p18);
-	p9->link(p11);
-	p9->link(p10);
-	p10->link(p12);
-	p11->link(p12);
-	p13->link(p10);
-	p13->link(p14);
-	p14->link(p15);
-	p15->link(p16);
-	p16->link(p17);
-	p17->link(p19);
-	p17->link(p18);
-	p18->link(p20);
-	p19->link(p20);
+}) });
+	//Nose top
+	o.add_plane({ std::make_shared<plane>(
+		std::vector<std::shared_ptr<point>>{
+		std::make_shared<point>(point{ {50,100,300} }),
+			std::make_shared<point>(point{ {250,100,300} }),
+			std::make_shared<point>(point{ {250,100,350} }),
+			std::make_shared<point>(point{ {50,100,350} })
+	}) });
+	//Nose bottom
+	o.add_plane({ std::make_shared<plane>(
+	std::vector<std::shared_ptr<point>>{
+		std::make_shared<point>(point{ {50,50,300} }),
+			std::make_shared<point>(point{ {250,50,300} }),
+			std::make_shared<point>(point{ {250,50,350} }),
+			std::make_shared<point>(point{ {50,50,350} })
+	}) });
+	//Nose right
+	o.add_plane({ std::make_shared<plane>(
+		std::vector<std::shared_ptr<point>>{
+		std::make_shared<point>(point{ {50,100,350} }),
+						std::make_shared<point>(point{ {250,100,350} }),
+			std::make_shared<point>(point{ {250,50,350} }),
+			std::make_shared<point>(point{ {50,50,350} })
 
-	o.add_points(std::vector<std::shared_ptr<point>>{
-		p1,p2,p3,p4,p5,p6,p7,p8,p9,p10,p11,p12,p13,p14,p15,p16,p17,p18,p19,p20
-	});
+	}) });
+	//Nose left
+	o.add_plane({ std::make_shared<plane>(
+		std::vector<std::shared_ptr<point>>{
+		std::make_shared<point>(point{ {50,100,300} }),
+			std::make_shared<point>(point{ {250,100,300} }),
+						std::make_shared<point>(point{ {250,50,300} }),
+			std::make_shared<point>(point{ {50,50,300} })
+
+	}) });
+	//Wing left
+	o.add_plane({ std::make_shared<plane>(
+		std::vector<std::shared_ptr<point>>{
+		std::make_shared<point>(point{ {75,100,300} }),
+			std::make_shared<point>(point{ {150,100,300} }),
+			std::make_shared<point>(point{ {150,130,200} }),
+			std::make_shared<point>(point{ {75,130,200} })
+	}) });
+	//Wing right
+	o.add_plane({ std::make_shared<plane>(
+		std::vector<std::shared_ptr<point>>{
+		std::make_shared<point>(point{ {75,100,350} }),
+			std::make_shared<point>(point{ {150,100,350} }),
+			std::make_shared<point>(point{ {150,130,450} }),
+			std::make_shared<point>(point{ {75,130,450} })
+	}) });
+	//Engine left
+	o.add_plane({ std::make_shared<plane>(
+		std::vector<std::shared_ptr<point>>{
+		std::make_shared<point>(point{ {125,110,280} }),
+			std::make_shared<point>(point{ {200,110,280} }),
+			std::make_shared<point>(point{ {200,90,280} }),
+			std::make_shared<point>(point{ {125,90,280} })
+	}) });
+	//Engine right
+	o.add_plane({ std::make_shared<plane>(
+		std::vector<std::shared_ptr<point>>{
+		std::make_shared<point>(point{ {125,110,370} }),
+			std::make_shared<point>(point{ {200,110,370} }),
+			std::make_shared<point>(point{ {200,90,370} }),
+			std::make_shared<point>(point{ {125,90,370} })
+	}) });
+	o.link_planes();
+
 	this->o = o;
 	objects_.emplace_back(o);
 }
