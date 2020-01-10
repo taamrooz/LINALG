@@ -48,7 +48,7 @@ void matrix::subtract(const matrix* m)
 	};
 }
 
-matrix& matrix::multiply_vector(vector* v)
+matrix& matrix::multiply_vector(vec3d* v)
 {
 	matrix temp_matrix{};
 	for (auto& row : numbers)

@@ -22,7 +22,9 @@ add_executable (LINALG
 	ui/grid.cpp
 	ui/object.cpp
 	ui/renderer.cpp
-	math/vector.cpp
+	ui/plane.cpp
+	ui/camera.cpp
+	math/vec3d.cpp
 	math/matrix.cpp
 	)
 

@@ -2,7 +2,7 @@
 #include "SDL.h"
 #include <vector>
 #include "object.h"
-#include "vector.h"
+#include "vec3d.h"
 #include "renderer.h"
 
 class Game
@@ -18,6 +18,6 @@ private:
 	void init_vectors();
 	void make_object();
 	std::vector<object> objects_{};
-	std::vector<vector> vectors_{};
+	std::vector<vec3d> vectors_{};
 	object o{};
 };

@@ -9,10 +9,11 @@ renderer::renderer(SDL_Renderer* renderer)
 void renderer::render(object& o, bool x_axis, bool y_axis, bool z_axis)
 {
 	SDL_SetRenderDrawColor(renderer_, 255, 255, 255, SDL_ALPHA_OPAQUE);
-	for (auto& point : o.points)
+	for (auto& plane : o.planes)
 	{
-		for (auto& connection : point->connections)
+		for (auto& point : plane->points)
 		{
+			for(auto& connection : point->connections)
 			SDL_RenderDrawLineF(renderer_, point->vector.x, point->vector.z,
 				connection->vector.x, connection->vector.z);
 		}

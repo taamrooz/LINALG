@@ -1,5 +1,5 @@
 #pragma once
-#include "vector.h"
+#include "vec3d.h"
 #include "SDL.h"
 #include <vector>
 #include <memory>
@@ -7,11 +7,11 @@
 class point
 {
 public:
-	point(vector v)
+	point(vec3d v)
 	{
 		vector = v;
 	}
-	vector vector;
+	vec3d vector;
 	std::vector<std::shared_ptr<point>> connections{};
 	void link(std::shared_ptr<point>& p) { connections.emplace_back(p); };
 };

@@ -63,12 +63,12 @@ bool Game::init()
 
 void Game::init_vectors()
 {
-	vectors_.emplace_back(vector{
+	vectors_.emplace_back(vec3d{
 		30,
 		60,
 		0
 		});
-	vectors_.emplace_back(vector{
+	vectors_.emplace_back(vec3d{
 		-20,
 		30,
 		0
@@ -124,10 +124,11 @@ void Game::make_object()
 	p17->link(p18);
 	p18->link(p20);
 	p19->link(p20);
-
-	o.add_points(std::vector<std::shared_ptr<point>>{
-		p1,p2,p3,p4,p5,p6,p7,p8,p9,p10,p11,p12,p13,p14,p15,p16,p17,p18,p19,p20
+	auto p = std::make_shared<plane>();
+	p->add_points(std::vector<std::shared_ptr<point>>{
+		p1, p2, p3, p4, p5, p6, p7, p8, p9, p10, p11, p12, p13, p14, p15, p16, p17, p18, p19, p20
 	});
+	o.add_plane(p);
 	this->o = o;
 	objects_.emplace_back(o);
 }

@@ -1,5 +1,5 @@
 #include "object.h"
-#include "vector.h"
+#include "vec3d.h"
 #include "standard_matrices.h"
 
 void object::add_plane(std::shared_ptr<plane> p)
@@ -21,7 +21,7 @@ void object::scale_from_origin(double x, double y, double z)
 	{
 		for (auto& point : plane->points)
 		{
-			auto v = vector{
+			auto v = vec3d{
 			point->vector.x,
 			point->vector.y,
 			point->vector.z
