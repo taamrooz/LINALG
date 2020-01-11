@@ -15,13 +15,8 @@ camera::camera(float fov) : fov_(fov)
 camera::~camera()
 = default;
 
-object camera::update(object& o, float move_x, float move_y, float move_z, float pitch_x, float pitch_y)
+object camera::update(object& o)
 {
-	eye_.x += move_x;
-	eye_.y += move_y;
-	eye_.z += move_z;
-	lookat_.x += pitch_x;
-	lookat_.y += pitch_y;
 	//lookat_ = o.get_middle_point().vector;
 	direction_ = eye_ - lookat_;
 	direction_.normalize();
@@ -68,3 +63,33 @@ object camera::update(object& o, float move_x, float move_y, float move_z, float
 	res_o.link_planes();
 	return res_o;
 }
+
+void camera::moveX(float x)
+{
+	eye_.x += x;
+}
+
+void camera::moveY(float y)
+{
+	eye_.y += y;
+}
+
+void camera::moveZ(float z)
+{
+	eye_.z += z;
+}
+
+void camera::pitchX(float x)
+{
+	lookat_.x += x;
+}
+
+void camera::pitchY(float y)
+{
+	lookat_.y += y;
+}
+
+
+
+
+

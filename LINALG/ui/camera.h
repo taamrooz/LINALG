@@ -14,7 +14,12 @@ public:
 	camera(camera&& other) = delete;
 	camera& operator=(const camera& other) = delete;
 	camera& operator=(camera&& other) = delete;
-	object update(object& o, float move_x, float move_y, float move_z, float pitch_x, float pitch_y);
+	object update(object& o);
+	void moveX(float x);
+	void moveY(float y);
+	void moveZ(float z);
+	void pitchX(float x);
+	void pitchY(float y);
 private:
 	
 	vec3d up_;
