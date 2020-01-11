@@ -27,7 +27,7 @@ void object::scale_from_origin(double x, double y, double z)
 			point->vector.z
 			};
 			auto m = scaling_matrix_3d(x, y, z);
-			m.multiply_vector(&v);
+			m.multiply_vector(v);
 			point->vector.x = m.numbers[0][0];
 			point->vector.y = m.numbers[1][0];
 			point->vector.z = m.numbers[2][0];
@@ -47,7 +47,7 @@ void object::translate(double x, double y, double z)
 			m.numbers.emplace_back(std::vector<float>{point->vector.z});
 			m.numbers.emplace_back(std::vector<float>{1});
 			auto t = translation_matrix_3d(x, y, z);
-			t.multiply_matrix(&m);
+			t.multiply_matrix(m);
 			point->vector.x = t.numbers[0][0];
 			point->vector.y = t.numbers[1][0];
 			point->vector.z = t.numbers[2][0];

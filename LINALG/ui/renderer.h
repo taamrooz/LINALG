@@ -10,4 +10,5 @@ public:
 	void render_front(object& o);
 	void render_side(object& o);
 	void render_top(object& o);
+	void render(object& o);
 };

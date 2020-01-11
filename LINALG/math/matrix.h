@@ -9,7 +9,7 @@ public:
 	matrix(int rows, int columns);
 	void add(const matrix* m);
 	void subtract(const matrix* m);
-	matrix& multiply_vector(vec3d* v);
-	matrix* multiply_matrix(matrix* m);
+	matrix multiply_vector(const vec3d& v);
+	matrix multiply_matrix(const matrix& m);
 	std::vector<std::vector<float>> numbers{};
 };

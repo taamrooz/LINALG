@@ -1,5 +1,6 @@
 #include "game.h"
 #include <iostream>
+#include "camera.h"
 
 bool Game::init()
 {
@@ -21,9 +22,11 @@ bool Game::init()
 
 	SDL_SetRenderDrawColor(renderer_, 0xFF, 0xFF, 0xFF, 0xFF);
 	r_ = { renderer_ };
+	camera cam = { 90 };
+	
 	init_vectors();
 	make_object();
-
+	
 	SDL_Event e;
 	bool quit = false;
 
@@ -32,10 +35,12 @@ bool Game::init()
 	bool render_side = false;
 	while (!quit)
 	{
+		float move_x{ 0 }, move_y{ 0 }, move_z{ 0 }, pitch_x{0}, pitch_y{0};
 		SDL_SetRenderDrawColor(renderer_, 0, 0, 0, SDL_ALPHA_OPAQUE);
 		SDL_RenderClear(renderer_);
 		while (SDL_PollEvent(&e) != 0)
 		{
+			
 			if (e.type == SDL_QUIT)
 			{
 				quit = true;
@@ -48,9 +53,19 @@ bool Game::init()
 				case SDLK_2: o.translate(2, 2, 2); break;
 				case SDLK_3: o.scale_from_point(2, 2, 2); break;
 				case SDLK_4: o.scale_from_point(0.5, 0.5, 0.5); break;
-				case SDLK_t: render_top = !render_top; break;
-				case SDLK_f: render_front = !render_front; break;
-				case SDLK_s: render_side = !render_side; break;
+				case SDLK_5: render_top = !render_top; break;
+				case SDLK_6: render_front = !render_front; break;
+				case SDLK_7: render_side = !render_side; break;
+				case SDLK_w: move_z += 1000; break;
+				case SDLK_a: move_x -= 1000; break;
+				case SDLK_s: move_z -= 1000; break;
+				case SDLK_d: move_x += 1000; break;
+				case SDLK_LSHIFT: move_y += 50; break;
+				case SDLK_LCTRL: move_y -= 50; break;
+				case SDLK_UP: pitch_y += 50; break;
+				case SDLK_LEFT: pitch_x -= 50; break;
+				case SDLK_RIGHT: pitch_x += 50; break;
+				case SDLK_DOWN: pitch_y -= 50; break;
 				}
 			}
 		}
@@ -60,7 +75,8 @@ bool Game::init()
 			r_.render_front(o);
 		if (render_side)
 			r_.render_side(o);
-
+		auto render_points = cam.update(o, move_x, move_y, move_z, pitch_x, pitch_y);
+		r_.render(render_points);
 		SDL_RenderPresent(renderer_);
 		SDL_Delay(1000 / 30);
 	}
