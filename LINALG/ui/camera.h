@@ -14,7 +14,7 @@ public:
 	camera(camera&& other) = delete;
 	camera& operator=(const camera& other) = delete;
 	camera& operator=(camera&& other) = delete;
-	object update(object& o);
+	std::vector<object> update(std::vector<object>& objects);
 	void moveX(float x);
 	void moveY(float y);
 	void moveZ(float z);

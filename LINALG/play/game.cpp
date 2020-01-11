@@ -74,8 +74,12 @@ bool Game::init()
 			r_.render_front(o);
 		if (render_side)
 			r_.render_side(o);
-		auto render_points = cam.update(o);
-		r_.render(render_points);
+		auto render_obj = cam.update(objects_);
+		for (auto obj : render_obj)
+		{
+			r_.render(obj);
+		}
+		
 		SDL_RenderPresent(renderer_);
 		SDL_Delay(1000 / 30);
 	}

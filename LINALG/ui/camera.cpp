@@ -15,7 +15,7 @@ camera::camera(float fov) : fov_(fov)
 camera::~camera()
 = default;
 
-object camera::update(object& o)
+std::vector<object> camera::update(std::vector<object>& objects)
 {
 	//lookat_ = o.get_middle_point().vector;
 	direction_ = eye_ - lookat_;
@@ -42,26 +42,30 @@ object camera::update(object& o)
 	per_m.numbers[2][0] = 0;     per_m.numbers[2][1] = 0;     per_m.numbers[2][2] = -far / (far - near);		  per_m.numbers[2][3] = -1;
 	per_m.numbers[3][0] = 0;	 per_m.numbers[3][1] = 0;	  per_m.numbers[3][2] = (-far * near) / (far - near); per_m.numbers[3][3] = 0;
 	
-	object res_o;
-	for (auto& pl : o.planes)
-	{
-		std::vector<std::shared_ptr<point>> res_p;
-		for (auto& p : pl->points)
+	std::vector<object> res_objs;
+	for (auto& o : objects) {
+		object res_o{};
+		for (const auto& pl : o.planes)
 		{
-			auto r = cam_m.multiply_vector(p->vector);
-			r = r.multiply_matrix(per_m);
-			point new_p{ r.numbers[0][0], r.numbers[1][0], r.numbers[2][0], r.numbers[3][0] };
-			auto screenSizeX = far / tan(fov_ /2) * 2;
-			auto screenSizeY = screenSizeX;
-			new_p.vector.x = (screenSizeX / 2) + (new_p.vector.x + 1) / new_p.w * screenSizeX * 0.5;
-			new_p.vector.y = (screenSizeY / 2) + (new_p.vector.y + 1) / new_p.w * screenSizeY * 0.5;
-			new_p.vector.z = -new_p.vector.z;
-			res_p.push_back(std::make_shared<point>(new_p));
+			std::vector<std::shared_ptr<point>> res_p;
+			for (auto& p : pl->points)
+			{
+				auto r = cam_m.multiply_vector(p->vector);
+				r = r.multiply_matrix(per_m);
+				point new_p{ r.numbers[0][0], r.numbers[1][0], r.numbers[2][0], r.numbers[3][0] };
+				auto screenSizeX = far / tan(fov_ / 2) * 2;
+				auto screenSizeY = screenSizeX;
+				new_p.vector.x = (screenSizeX / 2) + (new_p.vector.x + 1) / new_p.w * screenSizeX * 0.5;
+				new_p.vector.y = (screenSizeY / 2) + (new_p.vector.y + 1) / new_p.w * screenSizeY * 0.5;
+				new_p.vector.z = -new_p.vector.z;
+				res_p.push_back(std::make_shared<point>(new_p));
+			}
+			res_o.add_plane(std::make_shared<plane>(res_p));
 		}
-		res_o.add_plane(std::make_shared<plane>(res_p));
+		res_o.link_planes();
+		res_objs.push_back(res_o);
 	}
-	res_o.link_planes();
-	return res_o;
+	return res_objs;
 }
 
 void camera::moveX(float x)
