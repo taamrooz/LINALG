@@ -17,7 +17,6 @@ camera::~camera()
 
 std::vector<object> camera::update(std::vector<object>& objects)
 {
-	//lookat_ = o.get_middle_point().vector;
 	direction_ = eye_ - lookat_;
 	direction_.normalize();
 	up_ = { 0,1,0 };
