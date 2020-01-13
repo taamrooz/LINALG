@@ -25,8 +25,7 @@ bool Game::init()
 	r_ = { renderer_ };
 	camera cam = { 90 };
 
-	init_vectors();
-	make_ship_object();
+	make_ship_and_planet_objects();
 	cam.set_lookat(ship_.get_middle_point().vector);
 	SDL_Event e;
 	bool quit = false;
@@ -66,23 +65,19 @@ bool Game::init()
 				switch (e.key.keysym.sym)
 				{
 				case SDLK_w: ship_speed_up = true; break;
-				case SDLK_a: d = ship_.get_right(); ship_.move_object(d); break;
+				case SDLK_a: ship_yaw_left = true; break;
 				case SDLK_s: ship_slow_down = true; break;
-				case SDLK_d: d = ship_.get_right(); d *= -1; ship_.move_object(d); break;
-				case SDLK_LSHIFT: d = ship_.get_up(); d *= -1; ship_.move_object(d); break;
-				case SDLK_LCTRL: d = ship_.get_up(); ship_.move_object(d); break;
+				case SDLK_d: ship_yaw_right = true; break;
+				case SDLK_LSHIFT: ship_pitch_up = true; break;
+				case SDLK_LCTRL: ship_pitch_down = true; break;
 				case SDLK_PAGEUP: cam_up = true;  break;
 				case SDLK_PAGEDOWN: cam_down = true;  break;
 				case SDLK_UP: cam_x_n = true;  break;
 				case SDLK_LEFT: cam_z_n = true;  break;
 				case SDLK_DOWN: cam_x_p = true;  break;
 				case SDLK_RIGHT: cam_z_p = true;  break;
-				case SDLK_i: ship_pitch_up = true; break;
-				case SDLK_k: ship_pitch_down = true; break;
-				case SDLK_j: ship_roll_left = true; break;
-				case SDLK_l: ship_roll_right = true; break;
-				case SDLK_COMMA: ship_yaw_left = true; break;
-				case SDLK_PERIOD: ship_yaw_right = true; break;
+				case SDLK_q: ship_roll_left = true; break;
+				case SDLK_e: ship_roll_right = true; break;
 				}
 			}
 			else if (e.type == SDL_KEYUP)
@@ -91,25 +86,21 @@ bool Game::init()
 				switch (e.key.keysym.sym)
 				{
 				case SDLK_w: ship_speed_up = false; break;
-				case SDLK_a: d = ship_.get_right(); ship_.move_object(d); break;
+				case SDLK_a: ship_yaw_left = false; break;
 				case SDLK_s: ship_slow_down = false; break;
-				case SDLK_d: d = ship_.get_right(); d *= -1; ship_.move_object(d); break;
-				case SDLK_LSHIFT: d = ship_.get_up(); d *= -1; ship_.move_object(d); break;
-				case SDLK_LCTRL: d = ship_.get_up(); ship_.move_object(d); break;
+				case SDLK_d: ship_yaw_right = false; break;
+				case SDLK_LSHIFT: ship_pitch_up = false; break;
+				case SDLK_LCTRL: ship_pitch_down = false; break;
 				case SDLK_PAGEUP: cam_up = false;  break;
 				case SDLK_PAGEDOWN: cam_down = false;  break;
 				case SDLK_UP: cam_x_n = false;  break;
 				case SDLK_LEFT: cam_z_n = false;  break;
 				case SDLK_DOWN: cam_x_p = false;  break;
 				case SDLK_RIGHT: cam_z_p = false;  break;
+				case SDLK_q: ship_roll_left = false; break;
+				case SDLK_e: ship_roll_right = false; break;
 				case SDLK_SPACE: shoot(); break;
 				case SDLK_g: guide_line = !guide_line; break;
-				case SDLK_i: ship_pitch_up = false; break;
-				case SDLK_k: ship_pitch_down = false; break;
-				case SDLK_j: ship_roll_left = false; break;
-				case SDLK_l: ship_roll_right = false; break;
-				case SDLK_COMMA: ship_yaw_left = false; break;
-				case SDLK_PERIOD: ship_yaw_right = false; break;
 				}
 			}
 		}
@@ -178,21 +169,7 @@ bool Game::init()
 	return true;
 }
 
-void Game::init_vectors()
-{
-	vectors_.emplace_back(vec3d{
-		30,
-		60,
-		0
-		});
-	vectors_.emplace_back(vec3d{
-		-20,
-		30,
-		0
-		});
-}
-
-void Game::make_ship_object()
+void Game::make_ship_and_planet_objects()
 {
 	ship o{};
 	auto point_front = std::make_shared<point>(point{ {50,100,300} });

@@ -19,7 +19,6 @@ endif()
 add_executable (LINALG
 	main.cpp
 	play/game.cpp
-	ui/grid.cpp
 	ui/object.cpp
 	ui/renderer.cpp
 	ui/plane.cpp

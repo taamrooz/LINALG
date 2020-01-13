@@ -209,8 +209,8 @@ aabb object::get_aabb()
 		for (auto& point : plane->points)
 		{
 			if (point->vector.x < min_x) { min_x = point->vector.x; }
-			if (point->vector.y < min_y) { min_x = point->vector.y; }
-			if (point->vector.z < min_z) { min_x = point->vector.z; }
+			if (point->vector.y < min_y) { min_y = point->vector.y; }
+			if (point->vector.z < min_z) { min_z = point->vector.z; }
 			if (point->vector.x > max_x) { max_x = point->vector.x; }
 			if (point->vector.y > max_y) { max_y = point->vector.y; }
 			if (point->vector.z > max_z) { max_z = point->vector.z; }

@@ -15,8 +15,6 @@ public:
 	void set_front(std::shared_ptr<point> p);
 	void set_back(std::shared_ptr<point> p);
 	vec3d get_direction() const;
-	vec3d get_right() const;
-	vec3d get_up() const;
 	void roll(float degrees);
 	void pitch(float degrees);
 	void yaw(float degrees);

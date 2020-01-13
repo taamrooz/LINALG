@@ -2,8 +2,7 @@
 #include "bullet.h"
 
 ship::ship()
-{
-}
+= default;
 
 void ship::set_front(std::shared_ptr<point> p)
 {
@@ -19,18 +18,6 @@ vec3d ship::get_direction() const
 {
 	return direction_;
 }
-
-vec3d ship::get_right() const
-{
-	return right_;
-}
-
-vec3d ship::get_up() const
-{
-	return up_;
-}
-
-
 
 void ship::speed_up()
 {

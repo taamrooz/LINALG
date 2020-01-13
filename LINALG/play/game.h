@@ -10,7 +10,6 @@
 class Game
 {
 public:
-	
 	bool init();
 	ship ship_{};
 	cube cube_{};
@@ -21,9 +20,7 @@ private:
 	SDL_Window* window_{};
 	SDL_Renderer* renderer_{};
 	renderer r_ = nullptr;
-	void init_vectors();
-	void make_ship_object();
+	void make_ship_and_planet_objects();
 	std::vector<object> objects_{};
-	std::vector<vec3d> vectors_{};
 	void shoot();
 };

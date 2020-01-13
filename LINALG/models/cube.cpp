@@ -1,5 +1,6 @@
 #include "cube.h"
 #include "bullet.h"
+#include <iostream>
 
 void cube::update()
 {
