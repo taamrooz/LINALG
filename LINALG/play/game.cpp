@@ -40,6 +40,12 @@ bool Game::init()
 	bool ship_speed_up = false;
 	bool ship_slow_down = false;
 	bool guide_line = false;
+	bool ship_pitch_up = false;
+	bool ship_pitch_down = false;
+	bool ship_roll_left = false;
+	bool ship_roll_right = false;
+	bool ship_yaw_left = false;
+	bool ship_yaw_right = false;
 	while (!quit)
 	{
 		SDL_SetRenderDrawColor(renderer_, 0, 0, 0, SDL_ALPHA_OPAQUE);
@@ -68,12 +74,12 @@ bool Game::init()
 				case SDLK_LEFT: cam_z_n = true;  break;
 				case SDLK_DOWN: cam_x_p = true;  break;
 				case SDLK_RIGHT: cam_z_p = true;  break;
-				case SDLK_i: ship_.pitch(10); break;
-				case SDLK_k: ship_.pitch(-10); break;
-				case SDLK_j: ship_.roll(10); break;
-				case SDLK_l: ship_.roll(-10); break;
-				case SDLK_COMMA: ship_.yaw(10); break;
-				case SDLK_PERIOD: ship_.yaw(-10); break;
+				case SDLK_i: ship_pitch_up = true; break;
+				case SDLK_k: ship_pitch_down = true; break;
+				case SDLK_j: ship_roll_left = true; break;
+				case SDLK_l: ship_roll_right = true; break;
+				case SDLK_COMMA: ship_yaw_left = true; break;
+				case SDLK_PERIOD: ship_yaw_right = true; break;
 				}
 			}
 			else if (e.type == SDL_KEYUP)
@@ -95,6 +101,12 @@ bool Game::init()
 				case SDLK_RIGHT: cam_z_p = false;  break;
 				case SDLK_SPACE: shoot(); break;
 				case SDLK_g: guide_line = !guide_line; break;
+				case SDLK_i: ship_pitch_up = false; break;
+				case SDLK_k: ship_pitch_down = false; break;
+				case SDLK_j: ship_roll_left = false; break;
+				case SDLK_l: ship_roll_right = false; break;
+				case SDLK_COMMA: ship_yaw_left = false; break;
+				case SDLK_PERIOD: ship_yaw_right = false; break;
 				}
 			}
 		}
@@ -106,6 +118,12 @@ bool Game::init()
 		if (cam_z_n) { cam.moveZ(-5); }
 		if (ship_speed_up) { ship_.speed_up(); }
 		if (ship_slow_down) { ship_.slow_down(); }
+		if(ship_pitch_up) { ship_.pitch(1); }
+		if(ship_pitch_down) { ship_.pitch(-1); }
+		if(ship_roll_left) { ship_.roll(1); }
+		if(ship_roll_right) { ship_.roll(-1); }
+		if(ship_yaw_left) { ship_.yaw(-1); }
+		if (ship_yaw_right) { ship_.yaw(1); }
 		for (auto& b : bullets)
 		{
 			b->update();
