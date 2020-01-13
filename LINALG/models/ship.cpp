@@ -3,27 +3,39 @@
 ship::ship()
 = default;
 
-void ship::move_up()
+void ship::set_front(std::shared_ptr<point> p)
 {
-	
+	front = p;
 }
 
-void ship::move_down()
+void ship::set_back(std::shared_ptr<point> p)
 {
+	back = p;
 }
 
-void ship::move_forward()
+vec3d ship::get_direction() const
 {
+	return direction_;
 }
 
-void ship::move_left()
+vec3d ship::get_right() const
 {
+	return right_;
 }
 
-void ship::move_right()
+vec3d ship::get_up() const
 {
+	return up_;
 }
 
-void ship::move_back()
+void ship::update()
 {
+	direction_ = front->vector - back->vector;
+	direction_.normalize();
+	up_ = { 0,1,0 };
+	right_ = up_.cross(direction_);
+	right_.normalize();
+	up_ = direction_.cross(right_);
+	up_.normalize();
 }
+

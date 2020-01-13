@@ -26,3 +26,11 @@ void plane::link_points()
 	}
 	points[0]->link(points[points.size()-1]);
 }
+
+void plane::move_object(vec3d& v)
+{
+	for (auto p : points)
+	{
+		p->vector += v;
+	}
+}

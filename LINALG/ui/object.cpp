@@ -27,7 +27,7 @@ void object::scale_from_origin(double x, double y, double z)
 			point->vector.z
 			};
 			auto m = scaling_matrix_3d(x, y, z);
-			m.multiply_vector(v);
+			m = m.multiply_vector(v);
 			point->vector.x = m.numbers[0][0];
 			point->vector.y = m.numbers[1][0];
 			point->vector.z = m.numbers[2][0];
@@ -130,5 +130,13 @@ void object::link_planes()
 	for (auto& plane : planes)
 	{
 		plane->link_points();
+	}
+}
+
+void object::move_object(vec3d& v)
+{
+	for (auto& p : planes)
+	{
+		p->move_object(v);
 	}
 }

@@ -62,12 +62,12 @@ bool Game::init()
 				case SDLK_d: d = cam.get_right(); cam.moveX(d.x * 100); cam.moveY(d.y * 100); cam.moveZ(d.z * 100); break;
 				case SDLK_LSHIFT: d = cam.get_up(); cam.moveX(d.x * -100); cam.moveY(d.y * -100); cam.moveZ(d.z * -100); break;
 				case SDLK_LCTRL: d = cam.get_up(); cam.moveX(d.x * 100); cam.moveY(d.y * 100); cam.moveZ(d.z * 100); break;
-				case SDLK_PAGEUP: cam.moveY(50); break;
-				case SDLK_PAGEDOWN: cam.moveY(-50); break;
-				case SDLK_UP: cam.moveZ(50); break;
-				case SDLK_LEFT: cam.moveX(50); break;
-				case SDLK_RIGHT: cam.moveZ(-50); break;
-				case SDLK_DOWN: cam.moveX(-50); break;
+				case SDLK_PAGEUP: d = ship_.get_up(); d *= -1; ship_.move_object(d); break;
+				case SDLK_PAGEDOWN: d = ship_.get_up(); ship_.move_object(d); break;
+				case SDLK_UP: d = ship_.get_direction(); d *= -1; ship_.move_object(d); break;
+				case SDLK_LEFT: d = ship_.get_right(); d *= -1; ship_.move_object(d); break;
+				case SDLK_RIGHT: d = ship_.get_right(); ship_.move_object(d); break;
+				case SDLK_DOWN: d = ship_.get_direction(); d *= -1; ship_.move_object(d); break;
 				}
 			}
 		}
@@ -82,7 +82,7 @@ bool Game::init()
 		{
 			r_.render(obj);
 		}
-		
+		ship_.update();
 		SDL_RenderPresent(renderer_);
 		SDL_Delay(1000 / 30);
 	}
@@ -131,10 +131,12 @@ void Game::make_ship_object()
 
 }) });
 	//Nose top
+	auto point_front = std::make_shared<point>(point{ {50,100,300} });
+	auto point_back = std::make_shared<point>(point{ {250,100,300} });
 	o.add_plane({ std::make_shared<plane>(
 		std::vector<std::shared_ptr<point>>{
-		std::make_shared<point>(point{ {50,100,300} }),
-			std::make_shared<point>(point{ {250,100,300} }),
+		point_front,
+			point_back,
 			std::make_shared<point>(point{ {250,100,350} }),
 			std::make_shared<point>(point{ {50,100,350} })
 	}) });
@@ -199,5 +201,7 @@ void Game::make_ship_object()
 	o.link_planes();
 
 	this->ship_ = o;
+	ship_.set_front(point_front);
+	ship_.set_back(point_back);
 	objects_.emplace_back(o);
 }
