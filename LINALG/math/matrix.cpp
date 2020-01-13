@@ -109,3 +109,29 @@ matrix matrix::multiply_matrix(const matrix& m)
 	}
 	return temp_matrix;
 }
+
+std::vector<float> matrix::operator[](int index)
+{
+	return numbers[index];
+}
+
+matrix matrix::operator*(const matrix& m)
+{
+	matrix temp_matrix{ static_cast<int>(numbers.size()), static_cast<int>(m.numbers[0].size()) };
+	if (!numbers.empty())
+		if (numbers[0].size() != m.numbers.size())
+			return temp_matrix;
+
+
+	for (int i = 0; i < numbers.size(); ++i)
+	{
+		for (int j = 0; j < m.numbers[0].size(); ++j)
+		{
+			for (int k = 0; k < numbers[0].size(); ++k)
+			{
+				temp_matrix.numbers[i][j] += numbers[i][k] * m.numbers[k][j];
+			}
+		}
+	}
+	return temp_matrix;
+}

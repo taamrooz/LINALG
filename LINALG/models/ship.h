@@ -17,6 +17,9 @@ public:
 	vec3d get_direction() const;
 	vec3d get_right() const;
 	vec3d get_up() const;
+	void roll(float degrees);
+	void pitch(float degrees);
+	void yaw(float degrees);
 	void speed_up();
 	void slow_down();
 	void update();

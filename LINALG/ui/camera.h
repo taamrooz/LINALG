@@ -24,6 +24,7 @@ public:
 	void moveZ(float z);
 	void pitchX(float x);
 	void pitchY(float y);
+	void set_lookat(vec3d v);
 private:
 	
 	vec3d up_;

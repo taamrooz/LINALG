@@ -3,12 +3,7 @@
 #include "object.h"
 #include "point.h"
 #include "../models/ship.h"
-#include <iostream>
-
-constexpr auto PI = 3.14159265358979323846;
-constexpr auto PI_F(static_cast<float>(PI));
-
-inline float deg_to_radian(float degrees) { return degrees * PI_F / 180.f; }
+#include "deg_helper.h"
 
 camera::camera(float fov) : fov_(fov)
 {
@@ -19,7 +14,7 @@ camera::~camera()
 
 std::vector<object> camera::update(ship& ship, std::vector<object>& objects)
 {
-	lookat_ = ship.get_middle_point().vector;
+	//lookat_ = ship.get_middle_point().vector;
 	direction_ = eye_ - lookat_;
 	direction_.normalize();
 	up_ = { 0,1,0 };
@@ -110,6 +105,11 @@ void camera::pitchX(float x)
 void camera::pitchY(float y)
 {
 	lookat_.y += y;
+}
+
+void camera::set_lookat(vec3d v)
+{
+	lookat_ = v;
 }
 
 

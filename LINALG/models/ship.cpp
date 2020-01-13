@@ -2,7 +2,8 @@
 #include "bullet.h"
 
 ship::ship()
-= default;
+{
+}
 
 void ship::set_front(std::shared_ptr<point> p)
 {
@@ -29,6 +30,8 @@ vec3d ship::get_up() const
 	return up_;
 }
 
+
+
 void ship::speed_up()
 {
 	if(speed_ < 3.0f)
@@ -47,6 +50,22 @@ void ship::slow_down()
 		speed_ = 0;
 }
 
+void ship::roll(float degrees)
+{
+	rotate(degrees, get_middle_point().vector, direction_);
+}
+
+void ship::pitch(float degrees)
+{
+	rotate(degrees, get_middle_point().vector, right_);
+}
+
+void ship::yaw(float degrees)
+{
+	rotate(degrees, get_middle_point().vector, up_);
+}
+
+
 void ship::update()
 {
 	direction_ = front->vector - back->vector;
@@ -57,7 +76,7 @@ void ship::update()
 	up_ = direction_.cross(right_);
 	up_.normalize();
 
-	auto movement = direction_ * speed_;
+	auto movement = direction_ * speed_ * -1;
 	move_object(movement);
 }
 
