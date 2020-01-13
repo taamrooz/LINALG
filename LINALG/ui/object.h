@@ -3,6 +3,7 @@
 #include <vector>
 #include <unordered_map>
 #include "plane.h"
+#include "../models/aabb.h"
 
 class object
 {
@@ -19,6 +20,7 @@ public:
 	void link_planes();
 	void move_object(vec3d& v);
 	void set_position(vec3d v);
+	aabb get_aabb();
 protected:
 	vec3d position_;
 private:

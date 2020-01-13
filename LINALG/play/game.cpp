@@ -1,7 +1,7 @@
 #include "game.h"
 #include <iostream>
 #include "camera.h"
-#include "algorithm"
+
 
 bool Game::init()
 {
@@ -40,6 +40,9 @@ bool Game::init()
 	bool ship_speed_up = false;
 	bool ship_slow_down = false;
 	bool guide_line = false;
+
+	bool game_over = false;
+	bool won_game = false;
 	while (!quit)
 	{
 		SDL_SetRenderDrawColor(renderer_, 0, 0, 0, SDL_ALPHA_OPAQUE);
@@ -109,6 +112,14 @@ bool Game::init()
 		for (auto& b : bullets)
 		{
 			b->update();
+			if (cube_.collision_check(*b.get()))
+			{
+				quit = true; won_game = true; game_over = true;
+			}
+		}
+		if (cube_.collision_check(ship_))
+		{
+			quit = true; won_game = false; game_over = true;
 		}
 		std::vector<object> o_s;
 		o_s = objects_;
@@ -121,9 +132,24 @@ bool Game::init()
 		{
 			r_.render(obj);
 		}
+		cube_.update();
 		ship_.update();
 		SDL_RenderPresent(renderer_);
 		SDL_Delay(1000 / 30);
+	}
+	if (game_over) {
+		if (won_game) {
+			SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION,
+				"Goed gedaan!",
+				"Je hebt de kwade planeet verslagen! Goed zo!",
+				window_);
+		}
+		else {
+			SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION,
+				"Oeps!",
+				"Je bent tegen de planeet aangebotst en hebt verloren!",
+				window_);
+		}
 	}
 	if (renderer_ != nullptr) {
 		SDL_DestroyRenderer(renderer_);
@@ -247,7 +273,7 @@ void Game::make_ship_object()
 	ship_.set_position(ship_.get_middle_point().vector);
 	objects_.emplace_back(o);
 
-	object cube{};
+	cube cube{};
 	auto top_left = std::make_shared<point>(point{ {1000,100,1000} });
 	auto top_right = std::make_shared<point>(point{ {1100,100,1000} });
 	auto top_front_left = std::make_shared<point>(point{ {1000,100,1100} });
@@ -299,6 +325,7 @@ void Game::make_ship_object()
 			bottom_front_left
 	}) });
 	cube.link_planes();
+	cube_ = cube;
 	objects_.emplace_back(cube);
 }
 

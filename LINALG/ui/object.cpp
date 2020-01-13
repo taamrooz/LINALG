@@ -2,6 +2,7 @@
 #include "vec3d.h"
 #include "standard_matrices.h"
 #include "deg_helper.h"
+#include <functional>
 
 object::object()
 {
@@ -43,10 +44,16 @@ void object::scale_from_origin(float x, float y, float z)
 
 void object::translate(float x, float y, float z)
 {
+	std::vector<std::shared_ptr<point>> visited_points{};
 	for (auto& plane : planes)
 	{
 		for (auto& point : plane->points)
 		{
+			if(std::find(visited_points.begin(), visited_points.end(), point) != visited_points.end())
+			{
+				continue;
+			}
+			visited_points.emplace_back(point);
 			auto m = matrix{};
 			m.numbers.emplace_back(std::vector<float>{point->vector.x});
 			m.numbers.emplace_back(std::vector<float>{point->vector.y});
@@ -191,4 +198,32 @@ void object::move_object(vec3d& v)
 void object::set_position(vec3d v)
 {
 	position_ = v;
+}
+
+aabb object::get_aabb()
+{
+	float min_x = FLT_MAX;
+	float min_y = FLT_MAX;
+	float min_z = FLT_MAX;
+	float max_x = FLT_MIN;
+	float max_y = FLT_MIN;
+	float max_z = FLT_MIN;
+
+	for (auto& plane : planes)
+	{
+		for (auto& point : plane->points)
+		{
+			if (point->vector.x < min_x) { min_x = point->vector.x; }
+			if (point->vector.y < min_y) { min_x = point->vector.y; }
+			if (point->vector.z < min_z) { min_x = point->vector.z; }
+			if (point->vector.x > max_x) { max_x = point->vector.x; }
+			if (point->vector.y > max_y) { max_y = point->vector.y; }
+			if (point->vector.z > max_z) { max_z = point->vector.z; }
+		}
+	}
+
+	aabb aa_bb{};
+	aa_bb.min_values = {min_x, min_y, min_z};
+	aa_bb.max_values = { max_x, max_y, max_z };
+	return aa_bb;
 }

@@ -5,6 +5,7 @@
 #include "vec3d.h"
 #include "renderer.h"
 #include "../models/ship.h"
+#include "../models/cube.h"
 
 class Game
 {
@@ -12,6 +13,7 @@ public:
 	
 	bool init();
 	ship ship_{};
+	cube cube_{};
 	std::vector<std::shared_ptr<bullet>> bullets{};
 private:
 	int k_screen_width = 800;
