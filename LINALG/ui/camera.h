@@ -29,7 +29,7 @@ private:
 	vec3d up_;
 	vec3d right_;
 	vec3d direction_;
-	vec3d eye_{ 0,0,-200 };
+	vec3d eye_{ 0,0,0 };
 	vec3d lookat_{ 145,88,3000 };
 	float fov_;
 };

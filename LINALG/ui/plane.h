@@ -11,4 +11,5 @@ public:
 	void add_point(std::shared_ptr<point> p);
 	void add_points(std::vector<std::shared_ptr<point>> points);
 	void link_points();
+	void move_object(vec3d& v);
 };

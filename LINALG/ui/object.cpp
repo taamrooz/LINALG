@@ -169,3 +169,11 @@ void object::link_planes()
 		plane->link_points();
 	}
 }
+
+void object::move_object(vec3d& v)
+{
+	for (auto& p : planes)
+	{
+		p->move_object(v);
+	}
+}

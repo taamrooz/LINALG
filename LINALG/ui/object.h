@@ -16,7 +16,7 @@ public:
 	void rotate(float degrees, vec3d& position, vec3d& axis);
 	point get_middle_point();
 	void link_planes();
-	void move_object(float x, float y, float z);
+	void move_object(vec3d& v);
 private:
 	void rotate_x(float degrees);
 	void rotate_y(float degrees);
