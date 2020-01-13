@@ -1,7 +1,8 @@
 #include "ship.h"
 
 ship::ship()
-= default;
+{
+}
 
 void ship::set_front(std::shared_ptr<point> p)
 {
@@ -27,6 +28,22 @@ vec3d ship::get_up() const
 {
 	return up_;
 }
+
+void ship::roll(float degrees)
+{
+	rotate(degrees, position_, right_);
+}
+
+void ship::pitch(float degrees)
+{
+	rotate(degrees, position_, direction_);
+}
+
+void ship::yaw(float degrees)
+{
+	rotate(degrees, position_, up_);
+}
+
 
 void ship::update()
 {

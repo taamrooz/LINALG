@@ -68,6 +68,12 @@ bool Game::init()
 				case SDLK_LEFT: cam.moveZ(-40);  break;
 				case SDLK_DOWN: cam.moveX(40);  break;
 				case SDLK_RIGHT: cam.moveZ(40);  break;
+				case SDLK_i: ship_.pitch(10); break;
+				case SDLK_k: ship_.pitch(-10); break;
+				case SDLK_j: ship_.roll(10); break;
+				case SDLK_l: ship_.roll(-10); break;
+				case SDLK_COMMA: ship_.yaw(10); break;
+				case SDLK_PERIOD: ship_.yaw(-10); break;
 				}
 			}
 		}
@@ -205,6 +211,7 @@ void Game::make_ship_object()
 	this->ship_ = o;
 	ship_.set_front(point_front);
 	ship_.set_back(point_back);
+	ship_.set_position(ship_.get_middle_point().vector);
 	objects_.emplace_back(o);
 
 	object cube{};

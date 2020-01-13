@@ -3,6 +3,11 @@
 #include "standard_matrices.h"
 #include "deg_helper.h"
 
+object::object()
+{
+	position_ = get_middle_point().vector;
+}
+
 void object::add_plane(std::shared_ptr<plane> p)
 {
 	planes.emplace_back(p);
@@ -64,11 +69,32 @@ void object::scale_from_point(float scale_x, float scale_y, float scale_z)
 	translate(p_middle.vector.x, p_middle.vector.y, p_middle.vector.z);
 }
 
-void object::rotate(float degrees, vec3d& position, vec3d& axis)
+void object::rotate(float degrees, vec3d position, vec3d axis)
 {
+	position.normalize();
+	axis.x -= position.x;
+	axis.y -= position.y;
+	axis.z -= position.z;
 	translate(-position.x, -position.y, -position.z);
 	rotate_axis(degrees, axis);
 	translate(position.x, position.y, position.z);
+}
+
+void object::rotate_axis(float degrees, vec3d& axis)
+{
+	//calc tau deg by z / x with inverse tan
+	float tau_deg = rad_to_degree(axis.x != 0 ? atan(axis.z / axis.x) : 0);
+
+	rotate_y(tau_deg);
+	//calc cos of tau2
+	float tau2_cos = sqrtf(axis.x * axis.x + axis.z * axis.z) / sqrtf(axis.x * axis.x + axis.y * axis.y + axis.z * axis.z);
+	//float tau2_sin = axis.y / sqrtf(axis.x * axis.x + axis.y * axis.y + axis.z * axis.z);
+
+	float tau2_deg = rad_to_degree(acos(tau2_cos));
+	rotate_z(-tau2_deg);
+	rotate_x(degrees);
+	rotate_z(tau2_deg);
+	rotate_y(-tau_deg);
 }
 
 void object::rotate_x(float degrees)
@@ -119,22 +145,7 @@ void object::rotate_z(float degrees)
 	}
 }
 
-void object::rotate_axis(float degrees, vec3d& axis)
-{
-	//calc tau deg by z / x with inverse tan
-	float tau_deg = rad_to_degree(axis.x != 0 ? atan(axis.z / axis.x) : 0);
 
-	rotate_y(tau_deg);
-	//calc cos of tau2
-	float tau2_cos = sqrtf(axis.x * axis.x + axis.z * axis.z) / sqrtf(axis.x * axis.x + axis.y * axis.y + axis.z * axis.z);
-	//float tau2_sin = axis.y / sqrtf(axis.x * axis.x + axis.y * axis.y + axis.z * axis.z);
-
-	float tau2_deg = rad_to_degree(acos(tau2_cos));
-	rotate_z(-tau2_deg);
-	rotate_x(degrees);
-	rotate_z(tau2_deg);
-	rotate_y(-tau_deg);
-}
 
 point object::get_middle_point()
 {
@@ -176,4 +187,9 @@ void object::move_object(vec3d& v)
 	{
 		p->move_object(v);
 	}
+}
+
+void object::set_position(vec3d v)
+{
+	position_ = v;
 }

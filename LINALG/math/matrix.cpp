@@ -119,7 +119,7 @@ matrix matrix::operator*(const matrix& m)
 {
 	matrix temp_matrix{ static_cast<int>(numbers.size()), static_cast<int>(m.numbers[0].size()) };
 	if (!numbers.empty())
-		if (numbers.size() != m.numbers[0].size())
+		if (numbers[0].size() != m.numbers.size())
 			return temp_matrix;
 
 
