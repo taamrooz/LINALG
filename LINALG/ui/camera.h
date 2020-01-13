@@ -2,6 +2,7 @@
 #include "vec3d.h"
 #include <vector>
 
+class ship;
 class object;
 class point;
 
@@ -14,7 +15,10 @@ public:
 	camera(camera&& other) = delete;
 	camera& operator=(const camera& other) = delete;
 	camera& operator=(camera&& other) = delete;
-	std::vector<object> update(std::vector<object>& objects);
+	std::vector<object> update(ship& ship, std::vector<object>& objects);
+	vec3d get_direction() const;
+	vec3d get_right() const;
+	vec3d get_up() const;
 	void moveX(float x);
 	void moveY(float y);
 	void moveZ(float z);

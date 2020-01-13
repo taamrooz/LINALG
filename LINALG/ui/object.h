@@ -18,4 +18,5 @@ public:
 	void rotate_middle(double degrees);
 	point get_middle_point();
 	void link_planes();
+	void move_object(float x, float y, float z);
 };

@@ -2,6 +2,7 @@
 #include "matrix.h"
 #include "object.h"
 #include "point.h"
+#include "../models/ship.h"
 
 constexpr auto PI = 3.14159265358979323846;
 constexpr auto PI_F(static_cast<float>(PI));
@@ -15,8 +16,9 @@ camera::camera(float fov) : fov_(fov)
 camera::~camera()
 = default;
 
-std::vector<object> camera::update(std::vector<object>& objects)
+std::vector<object> camera::update(ship& ship, std::vector<object>& objects)
 {
+	lookat_ = ship.get_middle_point().vector;
 	direction_ = eye_ - lookat_;
 	direction_.normalize();
 	up_ = { 0,1,0 };
@@ -54,8 +56,8 @@ std::vector<object> camera::update(std::vector<object>& objects)
 				point new_p{ r.numbers[0][0], r.numbers[1][0], r.numbers[2][0], r.numbers[3][0] };
 				auto screenSizeX = far / tan(fov_ / 2) * 2;
 				auto screenSizeY = screenSizeX;
-				new_p.vector.x = (screenSizeX / 2) + (new_p.vector.x + 1) / new_p.w * screenSizeX * 0.5;
-				new_p.vector.y = (screenSizeY / 2) + (new_p.vector.y + 1) / new_p.w * screenSizeY * 0.5;
+				new_p.vector.x = (screenSizeX / 2) + (new_p.vector.x + 1) / new_p.w * screenSizeX * 0.5 + 400;
+				new_p.vector.y = (screenSizeY / 2) + (new_p.vector.y + 1) / new_p.w * screenSizeY * 0.5 + 300;
 				new_p.vector.z = -new_p.vector.z;
 				res_p.push_back(std::make_shared<point>(new_p));
 			}
@@ -65,6 +67,21 @@ std::vector<object> camera::update(std::vector<object>& objects)
 		res_objs.push_back(res_o);
 	}
 	return res_objs;
+}
+
+vec3d camera::get_direction() const
+{
+	return direction_;
+}
+
+vec3d camera::get_right() const
+{
+	return right_;
+}
+
+vec3d camera::get_up() const
+{
+	return up_;
 }
 
 void camera::moveX(float x)

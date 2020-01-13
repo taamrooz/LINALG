@@ -25,7 +25,7 @@ bool Game::init()
 	camera cam = { 90 };
 	
 	init_vectors();
-	make_object();
+	make_ship_object();
 	
 	SDL_Event e;
 	bool quit = false;
@@ -46,6 +46,7 @@ bool Game::init()
 			}
 			else if (e.type == SDL_KEYDOWN)
 			{
+				vec3d d{};
 				switch (e.key.keysym.sym)
 				{
 				case SDLK_1: o.scale_from_origin(2, 2, 2); break;
@@ -55,16 +56,18 @@ bool Game::init()
 				case SDLK_5: render_top = !render_top; break;
 				case SDLK_6: render_front = !render_front; break;
 				case SDLK_7: render_side = !render_side; break;
-				case SDLK_w: cam.moveZ(50); break;
-				case SDLK_a: cam.moveX(50); break;
-				case SDLK_s: cam.moveZ(-50); break;
-				case SDLK_d: cam.moveX(-50); break;
-				case SDLK_LSHIFT: cam.moveY(50); break;
-				case SDLK_LCTRL: cam.moveY(-50); break;
-				case SDLK_UP: cam.pitchY(-50); break;
-				case SDLK_LEFT: cam.pitchX(50); break;
-				case SDLK_RIGHT: cam.pitchX(-50); break;
-				case SDLK_DOWN: cam.pitchY(50); break;
+				case SDLK_w: d = cam.get_direction(); cam.moveX(d.x*-100); cam.moveY(d.y*-100); cam.moveZ(d.z*-100); break;
+				case SDLK_a: d = cam.get_right(); cam.moveX(d.x * -100); cam.moveY(d.y * -100); cam.moveZ(d.z * -100); break;
+				case SDLK_s: d = cam.get_direction(); cam.moveX(d.x*100); cam.moveY(d.y*100); cam.moveZ(d.z*100); break;
+				case SDLK_d: d = cam.get_right(); cam.moveX(d.x * 100); cam.moveY(d.y * 100); cam.moveZ(d.z * 100); break;
+				case SDLK_LSHIFT: d = cam.get_up(); cam.moveX(d.x * -100); cam.moveY(d.y * -100); cam.moveZ(d.z * -100); break;
+				case SDLK_LCTRL: d = cam.get_up(); cam.moveX(d.x * 100); cam.moveY(d.y * 100); cam.moveZ(d.z * 100); break;
+				case SDLK_PAGEUP: cam.moveY(50); break;
+				case SDLK_PAGEDOWN: cam.moveY(-50); break;
+				case SDLK_UP: cam.moveZ(50); break;
+				case SDLK_LEFT: cam.moveX(50); break;
+				case SDLK_RIGHT: cam.moveZ(-50); break;
+				case SDLK_DOWN: cam.moveX(-50); break;
 				}
 			}
 		}
@@ -74,7 +77,7 @@ bool Game::init()
 			r_.render_front(o);
 		if (render_side)
 			r_.render_side(o);
-		auto render_obj = cam.update(objects_);
+		auto render_obj = cam.update(ship_, objects_);
 		for (auto obj : render_obj)
 		{
 			r_.render(obj);
@@ -106,9 +109,9 @@ void Game::init_vectors()
 		});
 }
 
-void Game::make_object()
+void Game::make_ship_object()
 {
-	object o{};
+	ship o{};
 	//Nose front
 	o.add_plane({ std::make_shared<plane>(
 		std::vector<std::shared_ptr<point>>{
@@ -195,6 +198,6 @@ void Game::make_object()
 	}) });
 	o.link_planes();
 
-	this->o = o;
+	this->ship_ = o;
 	objects_.emplace_back(o);
 }

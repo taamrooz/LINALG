@@ -4,11 +4,13 @@
 #include "object.h"
 #include "vec3d.h"
 #include "renderer.h"
+#include "../models/ship.h"
 
 class Game
 {
 public:
 	bool init();
+	ship ship_{};
 private:
 	int k_screen_width = 800;
 	int k_screen_height = 600;
@@ -16,7 +18,7 @@ private:
 	SDL_Renderer* renderer_{};
 	renderer r_ = nullptr;
 	void init_vectors();
-	void make_object();
+	void make_ship_object();
 	std::vector<object> objects_{};
 	std::vector<vec3d> vectors_{};
 	object o{};
