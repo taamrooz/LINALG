@@ -3,11 +3,12 @@
 #include "object.h"
 #include "point.h"
 #include "../models/ship.h"
+#include <iostream>
 
 constexpr auto PI = 3.14159265358979323846;
 constexpr auto PI_F(static_cast<float>(PI));
 
-inline float deg_to_radian(float degrees) { return degrees * 180.f / PI_F; }
+inline float deg_to_radian(float degrees) { return degrees * PI_F / 180.f; }
 
 camera::camera(float fov) : fov_(fov)
 {
@@ -34,7 +35,7 @@ std::vector<object> camera::update(ship& ship, std::vector<object>& objects)
 
 	float near = 0.1;
 	float far = 5;
-	float scale = near * tanf(deg_to_radian(fov_) * 0.5f);
+	float scale = near * tan(deg_to_radian(fov_) * 0.5f);
 
 	auto per_m = matrix{ 4,4 };
 
@@ -42,7 +43,7 @@ std::vector<object> camera::update(ship& ship, std::vector<object>& objects)
 	per_m.numbers[1][0] = 0;     per_m.numbers[1][1] = scale; per_m.numbers[1][2] = 0;							  per_m.numbers[1][3] = 0;
 	per_m.numbers[2][0] = 0;     per_m.numbers[2][1] = 0;     per_m.numbers[2][2] = -far / (far - near);		  per_m.numbers[2][3] = -1;
 	per_m.numbers[3][0] = 0;	 per_m.numbers[3][1] = 0;	  per_m.numbers[3][2] = (-far * near) / (far - near); per_m.numbers[3][3] = 0;
-	
+
 	std::vector<object> res_objs;
 	for (auto& o : objects) {
 		object res_o{};
@@ -54,10 +55,12 @@ std::vector<object> camera::update(ship& ship, std::vector<object>& objects)
 				auto r = cam_m.multiply_vector(p->vector);
 				r = r.multiply_matrix(per_m);
 				point new_p{ r.numbers[0][0], r.numbers[1][0], r.numbers[2][0], r.numbers[3][0] };
-				auto screenSizeX = far / tan(fov_ / 2) * 2;
+				auto screenSizeX = far/tan(fov_/2)*2;
 				auto screenSizeY = screenSizeX;
-				new_p.vector.x = (screenSizeX / 2) + (new_p.vector.x + 1) / new_p.w * screenSizeX * 0.5 + 400;
-				new_p.vector.y = (screenSizeY / 2) + (new_p.vector.y + 1) / new_p.w * screenSizeY * 0.5 + 300;
+				new_p.vector.x = screenSizeX / 2 + (new_p.vector.x + 1) / new_p.w * (screenSizeX * 0.5)+400;
+				new_p.vector.y = screenSizeY / 2 + (new_p.vector.y + 1) / new_p.w * (screenSizeY * 0.5)+300;
+				//new_p.vector.x = new_p.vector.x / new_p.w + 400;
+				//new_p.vector.y = new_p.vector.y / new_p.w + 300;
 				new_p.vector.z = -new_p.vector.z;
 				res_p.push_back(std::make_shared<point>(new_p));
 			}

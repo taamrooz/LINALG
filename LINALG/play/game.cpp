@@ -23,10 +23,10 @@ bool Game::init()
 	SDL_SetRenderDrawColor(renderer_, 0xFF, 0xFF, 0xFF, 0xFF);
 	r_ = { renderer_ };
 	camera cam = { 90 };
-	
+
 	init_vectors();
 	make_ship_object();
-	
+
 	SDL_Event e;
 	bool quit = false;
 
@@ -39,7 +39,7 @@ bool Game::init()
 		SDL_RenderClear(renderer_);
 		while (SDL_PollEvent(&e) != 0)
 		{
-			
+
 			if (e.type == SDL_QUIT)
 			{
 				quit = true;
@@ -56,18 +56,18 @@ bool Game::init()
 				case SDLK_5: render_top = !render_top; break;
 				case SDLK_6: render_front = !render_front; break;
 				case SDLK_7: render_side = !render_side; break;
-				case SDLK_w: d = cam.get_direction(); cam.moveX(d.x*-100); cam.moveY(d.y*-100); cam.moveZ(d.z*-100); break;
-				case SDLK_a: d = cam.get_right(); cam.moveX(d.x * -100); cam.moveY(d.y * -100); cam.moveZ(d.z * -100); break;
-				case SDLK_s: d = cam.get_direction(); cam.moveX(d.x*100); cam.moveY(d.y*100); cam.moveZ(d.z*100); break;
-				case SDLK_d: d = cam.get_right(); cam.moveX(d.x * 100); cam.moveY(d.y * 100); cam.moveZ(d.z * 100); break;
-				case SDLK_LSHIFT: d = cam.get_up(); cam.moveX(d.x * -100); cam.moveY(d.y * -100); cam.moveZ(d.z * -100); break;
-				case SDLK_LCTRL: d = cam.get_up(); cam.moveX(d.x * 100); cam.moveY(d.y * 100); cam.moveZ(d.z * 100); break;
-				case SDLK_PAGEUP: d = ship_.get_up(); d *= -1; ship_.move_object(d); break;
-				case SDLK_PAGEDOWN: d = ship_.get_up(); ship_.move_object(d); break;
-				case SDLK_UP: d = ship_.get_direction(); d *= -1; ship_.move_object(d); break;
-				case SDLK_LEFT: d = ship_.get_right(); d *= -1; ship_.move_object(d); break;
-				case SDLK_RIGHT: d = ship_.get_right(); ship_.move_object(d); break;
-				case SDLK_DOWN: d = ship_.get_direction(); d *= -1; ship_.move_object(d); break;
+				case SDLK_w: d = ship_.get_direction(); d *= -1; ship_.move_object(d); break;
+				case SDLK_a: d = ship_.get_right(); ship_.move_object(d); break;
+				case SDLK_s: d = ship_.get_direction();  ship_.move_object(d); break;
+				case SDLK_d: d = ship_.get_right(); d *= -1; ship_.move_object(d); break;
+				case SDLK_LSHIFT: d = ship_.get_up(); d *= -1; ship_.move_object(d); break;
+				case SDLK_LCTRL: d = ship_.get_up(); ship_.move_object(d); break;
+				case SDLK_PAGEUP: cam.moveY(-40);  break;
+				case SDLK_PAGEDOWN: cam.moveY(40);  break;
+				case SDLK_UP: cam.moveX(-40);  break;
+				case SDLK_LEFT: cam.moveZ(-40);  break;
+				case SDLK_DOWN: cam.moveX(40);  break;
+				case SDLK_RIGHT: cam.moveZ(40);  break;
 				}
 			}
 		}
@@ -112,6 +112,9 @@ void Game::init_vectors()
 void Game::make_ship_object()
 {
 	ship o{};
+	auto point_front = std::make_shared<point>(point{ {50,100,300} });
+	auto point_back = std::make_shared<point>(point{ {250,100,300} });
+
 	//Nose front
 	o.add_plane({ std::make_shared<plane>(
 		std::vector<std::shared_ptr<point>>{
@@ -131,8 +134,7 @@ void Game::make_ship_object()
 
 }) });
 	//Nose top
-	auto point_front = std::make_shared<point>(point{ {50,100,300} });
-	auto point_back = std::make_shared<point>(point{ {250,100,300} });
+
 	o.add_plane({ std::make_shared<plane>(
 		std::vector<std::shared_ptr<point>>{
 		point_front,
@@ -204,4 +206,58 @@ void Game::make_ship_object()
 	ship_.set_front(point_front);
 	ship_.set_back(point_back);
 	objects_.emplace_back(o);
+
+	object cube{};
+	auto top_left = std::make_shared<point>(point{ {1000,100,1000} });
+	auto top_right = std::make_shared<point>(point{ {1100,100,1000} });
+	auto top_front_left = std::make_shared<point>(point{ {1000,100,1100} });
+	auto top_front_right = std::make_shared<point>(point{ {1200,200,1100} });
+	auto bottom_left = std::make_shared<point>(point{ {1000,0,1000} });
+	auto bottom_right = std::make_shared<point>(point{ {1100,0,1000} });
+	auto bottom_front_left = std::make_shared<point>(point{ {1000,0,1100} });
+	auto bottom_front_right = std::make_shared<point>(point{ {1100,0,1100} });
+	cube.add_plane({ std::make_shared<plane>(
+		std::vector<std::shared_ptr<point>>{
+		bottom_left,
+			bottom_right,
+			top_right,
+			top_left
+	}) });
+	cube.add_plane({ std::make_shared<plane>(
+		std::vector<std::shared_ptr<point>>{
+		top_left,
+			top_right,
+			top_front_right,
+			top_front_left
+	}) });
+	cube.add_plane({ std::make_shared<plane>(
+		std::vector<std::shared_ptr<point>>{
+		top_left,
+			top_front_left,
+			bottom_front_left,
+			bottom_left
+	}) });
+	cube.add_plane({ std::make_shared<plane>(
+		std::vector<std::shared_ptr<point>>{
+		bottom_left,
+			bottom_right,
+			bottom_front_right,
+			bottom_front_left
+	}) });
+	cube.add_plane({ std::make_shared<plane>(
+		std::vector<std::shared_ptr<point>>{
+		top_right,
+			top_front_right,
+			bottom_front_right,
+			bottom_right
+	}) });
+	cube.add_plane({ std::make_shared<plane>(
+		std::vector<std::shared_ptr<point>>{
+		top_front_left,
+			top_front_right,
+			bottom_front_right,
+			bottom_front_left
+	}) });
+	cube.link_planes();
+	objects_.emplace_back(cube);
 }
