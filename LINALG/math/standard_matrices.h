@@ -31,20 +31,20 @@ inline auto scaling_matrix_3d = [](double x, double y, double z) {
 	return return_matrix;
 };
 
-inline auto translation_matrix_3d = [](double x, double y, double z) {
+inline auto translation_matrix_3d = [](float x, float y, float z) {
 	matrix return_matrix{};
 
 	std::vector<float> row{};
-	row.emplace_back(1);
-	row.emplace_back(0);
-	row.emplace_back(0);
 	row.emplace_back(x);
+	row.emplace_back(0);
+	row.emplace_back(0);
+	row.emplace_back(0);
 	return_matrix.numbers.emplace_back(row);
 	row.clear();
 	row.emplace_back(0);
-	row.emplace_back(1);
-	row.emplace_back(0);
 	row.emplace_back(y);
+	row.emplace_back(0);
+	row.emplace_back(0);
 	return_matrix.numbers.emplace_back(row);
 	row.clear();
 	row.emplace_back(0);

@@ -68,6 +68,7 @@ bool Game::init()
 				case SDLK_LEFT: cam.moveX(50); break;
 				case SDLK_RIGHT: cam.moveZ(-50); break;
 				case SDLK_DOWN: cam.moveX(-50); break;
+				case SDLK_k: ship_.rotate_x(30);
 				}
 			}
 		}

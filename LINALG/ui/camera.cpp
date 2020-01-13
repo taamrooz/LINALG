@@ -3,11 +3,7 @@
 #include "object.h"
 #include "point.h"
 #include "../models/ship.h"
-
-constexpr auto PI = 3.14159265358979323846;
-constexpr auto PI_F(static_cast<float>(PI));
-
-inline float deg_to_radian(float degrees) { return degrees * 180.f / PI_F; }
+#include "deg_helper.h"
 
 camera::camera(float fov) : fov_(fov)
 {
@@ -58,7 +54,7 @@ std::vector<object> camera::update(ship& ship, std::vector<object>& objects)
 				auto screenSizeY = screenSizeX;
 				new_p.vector.x = (screenSizeX / 2) + (new_p.vector.x + 1) / new_p.w * screenSizeX * 0.5 + 400;
 				new_p.vector.y = (screenSizeY / 2) + (new_p.vector.y + 1) / new_p.w * screenSizeY * 0.5 + 300;
-				new_p.vector.z = -new_p.vector.z;
+				//new_p.vector.z = -new_p.vector.z;
 				res_p.push_back(std::make_shared<point>(new_p));
 			}
 			res_o.add_plane(std::make_shared<plane>(res_p));
