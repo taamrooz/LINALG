@@ -9,8 +9,10 @@
 class Game
 {
 public:
+	
 	bool init();
 	ship ship_{};
+	std::vector<std::shared_ptr<bullet>> bullets{};
 private:
 	int k_screen_width = 800;
 	int k_screen_height = 600;
@@ -21,5 +23,5 @@ private:
 	void make_ship_object();
 	std::vector<object> objects_{};
 	std::vector<vec3d> vectors_{};
-	object o{};
+	void shoot();
 };

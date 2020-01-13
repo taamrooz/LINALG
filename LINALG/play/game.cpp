@@ -1,6 +1,7 @@
 #include "game.h"
 #include <iostream>
 #include "camera.h"
+#include "algorithm"
 
 bool Game::init()
 {
@@ -30,9 +31,15 @@ bool Game::init()
 	SDL_Event e;
 	bool quit = false;
 
-	bool render_top = false;
-	bool render_front = false;
-	bool render_side = false;
+	bool cam_up = false;
+	bool cam_down = false;
+	bool cam_z_p = false;
+	bool cam_x_p = false;
+	bool cam_z_n = false;
+	bool cam_x_n = false;
+	bool ship_speed_up = false;
+	bool ship_slow_down = false;
+	bool guide_line = false;
 	while (!quit)
 	{
 		SDL_SetRenderDrawColor(renderer_, 0, 0, 0, SDL_ALPHA_OPAQUE);
@@ -49,41 +56,61 @@ bool Game::init()
 				vec3d d{};
 				switch (e.key.keysym.sym)
 				{
-				case SDLK_1: o.scale_from_origin(2, 2, 2); break;
-				case SDLK_2: o.translate(2, 2, 2); break;
-				case SDLK_3: o.scale_from_point(2, 2, 2); break;
-				case SDLK_4: o.scale_from_point(0.5, 0.5, 0.5); break;
-				case SDLK_5: render_top = !render_top; break;
-				case SDLK_6: render_front = !render_front; break;
-				case SDLK_7: render_side = !render_side; break;
-				case SDLK_w: d = ship_.get_direction(); d *= -1; ship_.move_object(d); break;
+				case SDLK_w: ship_speed_up = true; break;
 				case SDLK_a: d = ship_.get_right(); ship_.move_object(d); break;
-				case SDLK_s: d = ship_.get_direction();  ship_.move_object(d); break;
+				case SDLK_s: ship_slow_down = true; break;
 				case SDLK_d: d = ship_.get_right(); d *= -1; ship_.move_object(d); break;
 				case SDLK_LSHIFT: d = ship_.get_up(); d *= -1; ship_.move_object(d); break;
 				case SDLK_LCTRL: d = ship_.get_up(); ship_.move_object(d); break;
-				case SDLK_PAGEUP: cam.moveY(-40);  break;
-				case SDLK_PAGEDOWN: cam.moveY(40);  break;
-				case SDLK_UP: cam.moveX(-40);  break;
-				case SDLK_LEFT: cam.moveZ(-40);  break;
-				case SDLK_DOWN: cam.moveX(40);  break;
-				case SDLK_RIGHT: cam.moveZ(40);  break;
-				case SDLK_i: ship_.pitch(10); break;
-				case SDLK_k: ship_.pitch(-10); break;
-				case SDLK_j: ship_.roll(10); break;
-				case SDLK_l: ship_.roll(-10); break;
-				case SDLK_COMMA: ship_.yaw(10); break;
-				case SDLK_PERIOD: ship_.yaw(-10); break;
+				case SDLK_PAGEUP: cam_up = true;  break;
+				case SDLK_PAGEDOWN: cam_down = true;  break;
+				case SDLK_UP: cam_x_n = true;  break;
+				case SDLK_LEFT: cam_z_n = true;  break;
+				case SDLK_DOWN: cam_x_p = true;  break;
+				case SDLK_RIGHT: cam_z_p = true;  break;
+				}
+			}
+			else if (e.type == SDL_KEYUP)
+			{
+				vec3d d{};
+				switch (e.key.keysym.sym)
+				{
+				case SDLK_w: ship_speed_up = false; break;
+				case SDLK_a: d = ship_.get_right(); ship_.move_object(d); break;
+				case SDLK_s: ship_slow_down = false; break;
+				case SDLK_d: d = ship_.get_right(); d *= -1; ship_.move_object(d); break;
+				case SDLK_LSHIFT: d = ship_.get_up(); d *= -1; ship_.move_object(d); break;
+				case SDLK_LCTRL: d = ship_.get_up(); ship_.move_object(d); break;
+				case SDLK_PAGEUP: cam_up = false;  break;
+				case SDLK_PAGEDOWN: cam_down = false;  break;
+				case SDLK_UP: cam_x_n = false;  break;
+				case SDLK_LEFT: cam_z_n = false;  break;
+				case SDLK_DOWN: cam_x_p = false;  break;
+				case SDLK_RIGHT: cam_z_p = false;  break;
+				case SDLK_SPACE: shoot(); break;
+				case SDLK_g: guide_line = !guide_line; break;
 				}
 			}
 		}
-		if (render_top)
-			r_.render_top(o);
-		if (render_front)
-			r_.render_front(o);
-		if (render_side)
-			r_.render_side(o);
-		auto render_obj = cam.update(ship_, objects_);
+		if (cam_up) { cam.moveY(5); }
+		if (cam_down) { cam.moveY(-5); }
+		if (cam_x_p) { cam.moveX(5); }
+		if (cam_x_n) { cam.moveX(-5); }
+		if (cam_z_p) { cam.moveZ(5); }
+		if (cam_z_n) { cam.moveZ(-5); }
+		if (ship_speed_up) { ship_.speed_up(); }
+		if (ship_slow_down) { ship_.slow_down(); }
+		for (auto& b : bullets)
+		{
+			b->update();
+		}
+		std::vector<object> o_s;
+		o_s = objects_;
+		if (guide_line) {
+			auto gl = ship_.give_guide_line();
+			o_s.emplace_back(*gl.get());
+		}
+		auto render_obj = cam.update(ship_, o_s);
 		for (auto obj : render_obj)
 		{
 			r_.render(obj);
@@ -218,7 +245,7 @@ void Game::make_ship_object()
 	auto top_left = std::make_shared<point>(point{ {1000,100,1000} });
 	auto top_right = std::make_shared<point>(point{ {1100,100,1000} });
 	auto top_front_left = std::make_shared<point>(point{ {1000,100,1100} });
-	auto top_front_right = std::make_shared<point>(point{ {1200,200,1100} });
+	auto top_front_right = std::make_shared<point>(point{ {1100,100,1100} });
 	auto bottom_left = std::make_shared<point>(point{ {1000,0,1000} });
 	auto bottom_right = std::make_shared<point>(point{ {1100,0,1000} });
 	auto bottom_front_left = std::make_shared<point>(point{ {1000,0,1100} });
@@ -267,4 +294,11 @@ void Game::make_ship_object()
 	}) });
 	cube.link_planes();
 	objects_.emplace_back(cube);
+}
+
+void Game::shoot()
+{
+	auto b = std::shared_ptr<bullet>(ship_.shoot());
+	objects_.emplace_back(*b.get());
+	bullets.emplace_back(b);
 }

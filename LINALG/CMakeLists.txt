@@ -25,6 +25,7 @@ add_executable (LINALG
 	ui/plane.cpp
 	ui/camera.cpp
 	models/ship.cpp
+	models/bullet.cpp
 	math/vec3d.cpp
 	math/matrix.cpp
 	)

@@ -1,4 +1,5 @@
 #include "ship.h"
+#include "bullet.h"
 
 ship::ship()
 {
@@ -29,6 +30,26 @@ vec3d ship::get_up() const
 	return up_;
 }
 
+
+
+void ship::speed_up()
+{
+	if(speed_ < 3.0f)
+	{
+		speed_ += 0.1f;
+	}
+}
+
+void ship::slow_down()
+{
+	if (speed_ > 0)
+	{
+		speed_ -= 0.1f;
+	}
+	if (speed_ < 0)
+		speed_ = 0;
+}
+
 void ship::roll(float degrees)
 {
 	rotate(degrees, position_, right_);
@@ -54,5 +75,40 @@ void ship::update()
 	right_.normalize();
 	up_ = direction_.cross(right_);
 	up_.normalize();
+
+	auto movement = direction_ * speed_;
+	move_object(movement);
+}
+
+std::shared_ptr<bullet> ship::shoot()
+{
+	bullet b{};
+	auto dir = get_direction();
+	dir *= 10;
+	auto front = std::make_shared<point>(point{ get_middle_point().vector -  dir });
+	auto back = std::make_shared<point>(point{ get_middle_point().vector });
+	b.add_plane({ std::make_shared<plane>(
+		std::vector<std::shared_ptr<point>>{
+			front,
+			back,
+	})});
+	b.set_front(front);
+	b.set_back(back);
+	b.link_planes();
+	b.set_speed(5 + speed_);
+	return std::make_shared<bullet>(b);
+}
+
+std::shared_ptr<object> ship::give_guide_line()
+{
+	vec3d guide_line_end = direction_;
+	guide_line_end *= 1000;
+	object o {};
+	o.add_plane({ std::make_shared<plane>(
+		std::vector<std::shared_ptr<point>>{
+			std::make_shared<point>(point{ get_middle_point().vector - guide_line_end }),
+			std::make_shared<point>(point{ get_middle_point().vector })
+	}) });
+	return std::make_shared<object>(o);
 }
 
