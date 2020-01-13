@@ -21,13 +21,13 @@ void object::scale_from_origin(double x, double y, double z)
 	{
 		for (auto& point : plane->points)
 		{
-			auto v = vec3d{
-			point->vector.x,
-			point->vector.y,
-			point->vector.z
-			};
-			auto m = scaling_matrix_3d(x, y, z);
-			m = m.multiply_vector(v);
+			auto m = matrix{};
+			m.numbers.emplace_back(std::vector<float>{point->vector.x});
+			m.numbers.emplace_back(std::vector<float>{point->vector.y});
+			m.numbers.emplace_back(std::vector<float>{point->vector.z});
+			m.numbers.emplace_back(std::vector<float>{1});
+			auto s = scaling_matrix_3d(x, y, z);
+			s = s.multiply_matrix(m);
 			point->vector.x = m.numbers[0][0];
 			point->vector.y = m.numbers[1][0];
 			point->vector.z = m.numbers[2][0];
@@ -58,7 +58,7 @@ void object::translate(double x, double y, double z)
 void object::scale_from_point(double scale_x, double scale_y, double scale_z)
 {
 	auto p_middle = get_middle_point();
-	translate(0 - p_middle.vector.x, 0 - p_middle.vector.y, 0 - p_middle.vector.z);
+	translate(0.0f - p_middle.vector.x, 0.0f - p_middle.vector.y, 0.0f - p_middle.vector.z);
 	scale_from_origin(scale_x, scale_y, scale_z);
 	translate(p_middle.vector.x, p_middle.vector.y, p_middle.vector.z);
 }
