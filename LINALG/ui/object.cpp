@@ -78,10 +78,6 @@ void object::scale_from_point(float scale_x, float scale_y, float scale_z)
 
 void object::rotate(float degrees, vec3d position, vec3d axis)
 {
-	//position.normalize();
-	/*axis.x -= position.x;
-	axis.y -= position.y;
-	axis.z -= position.z;*/
 	translate(-position.x, -position.y, -position.z);
 	rotate_axis(degrees, axis);
 	translate(position.x, position.y, position.z);
@@ -90,8 +86,7 @@ void object::rotate(float degrees, vec3d position, vec3d axis)
 void object::rotate_axis(float degrees, vec3d& axis)
 {
 	//calc tau deg by z / x with inverse tan
-	float tau_deg = rad_to_degree(axis.x != 0 ? atan(axis.z / axis.x) : 0);
-
+	float tau_deg = rad_to_degree(axis.x != 0 ? atanf(axis.z / axis.x) : 0);
 	rotate_y(tau_deg);
 	//calc cos of tau2
 	float tau2_cos = sqrtf(axis.x * axis.x + axis.z * axis.z) / sqrtf(axis.x * axis.x + axis.y * axis.y + axis.z * axis.z);
