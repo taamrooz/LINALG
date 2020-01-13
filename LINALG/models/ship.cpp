@@ -52,17 +52,17 @@ void ship::slow_down()
 
 void ship::roll(float degrees)
 {
-	rotate(degrees, position_, right_);
+	rotate(degrees, get_middle_point().vector, direction_);
 }
 
 void ship::pitch(float degrees)
 {
-	rotate(degrees, position_, direction_);
+	rotate(degrees, get_middle_point().vector, right_);
 }
 
 void ship::yaw(float degrees)
 {
-	rotate(degrees, position_, up_);
+	rotate(degrees, get_middle_point().vector, up_);
 }
 
 
@@ -76,7 +76,7 @@ void ship::update()
 	up_ = direction_.cross(right_);
 	up_.normalize();
 
-	auto movement = direction_ * speed_;
+	auto movement = direction_ * speed_ * -1;
 	move_object(movement);
 }
 

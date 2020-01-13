@@ -14,7 +14,7 @@ camera::~camera()
 
 std::vector<object> camera::update(ship& ship, std::vector<object>& objects)
 {
-	lookat_ = ship.get_middle_point().vector;
+	//lookat_ = ship.get_middle_point().vector;
 	direction_ = eye_ - lookat_;
 	direction_.normalize();
 	up_ = { 0,1,0 };
@@ -105,6 +105,11 @@ void camera::pitchX(float x)
 void camera::pitchY(float y)
 {
 	lookat_.y += y;
+}
+
+void camera::set_lookat(vec3d v)
+{
+	lookat_ = v;
 }
 
 

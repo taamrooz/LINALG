@@ -27,7 +27,7 @@ bool Game::init()
 
 	init_vectors();
 	make_ship_object();
-
+	cam.set_lookat(ship_.get_middle_point().vector);
 	SDL_Event e;
 	bool quit = false;
 
@@ -68,6 +68,12 @@ bool Game::init()
 				case SDLK_LEFT: cam_z_n = true;  break;
 				case SDLK_DOWN: cam_x_p = true;  break;
 				case SDLK_RIGHT: cam_z_p = true;  break;
+				case SDLK_i: ship_.pitch(10); break;
+				case SDLK_k: ship_.pitch(-10); break;
+				case SDLK_j: ship_.roll(10); break;
+				case SDLK_l: ship_.roll(-10); break;
+				case SDLK_COMMA: ship_.yaw(10); break;
+				case SDLK_PERIOD: ship_.yaw(-10); break;
 				}
 			}
 			else if (e.type == SDL_KEYUP)

@@ -81,8 +81,8 @@ inline auto rotation_matrix_3d_y = [](float degrees) {
 
 inline auto rotation_matrix_3d_z = [](float degrees) {
 	matrix return_matrix{ 4,4 };
-	return_matrix.numbers[0][0] = cosf(degrees);  return_matrix.numbers[0][1] = -sinf(degrees); return_matrix.numbers[0][2] = 0; return_matrix.numbers[0][3] = 0;
-	return_matrix.numbers[1][0] = sinf(degrees);  return_matrix.numbers[1][1] = cosf(degrees);  return_matrix.numbers[1][2] = 0; return_matrix.numbers[1][3] = 0;
+	return_matrix.numbers[0][0] = cosf(degrees);  return_matrix.numbers[0][1] = sinf(degrees);  return_matrix.numbers[0][2] = 0; return_matrix.numbers[0][3] = 0;
+	return_matrix.numbers[1][0] = -sinf(degrees); return_matrix.numbers[1][1] = cosf(degrees);  return_matrix.numbers[1][2] = 0; return_matrix.numbers[1][3] = 0;
 	return_matrix.numbers[2][0] = 0;              return_matrix.numbers[2][1] = 0;              return_matrix.numbers[2][2] = 1; return_matrix.numbers[2][3] = 0;
 	return_matrix.numbers[3][0] = 0;			  return_matrix.numbers[3][1] = 0;              return_matrix.numbers[3][2] = 0; return_matrix.numbers[3][3] = 1;
 	return return_matrix;
