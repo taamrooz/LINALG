@@ -70,7 +70,7 @@ vec3d vec3d::operator*(const vec3d& v) const
 
 vec3d vec3d::operator*(float v) const
 {
-	return vec3d{ z * v, y * v, z * v };
+	return vec3d{ x * v, y * v, z * v };
 }
 
 vec3d vec3d::operator/(float v) const
